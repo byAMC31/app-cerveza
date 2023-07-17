@@ -9,10 +9,8 @@ import SignUp from './src/screens/SignUp';
 import HomeCliente from './src/screens/HomeCliente';
 import ProductosCervezas from './src/screens/ProductosCervezas';
 import ProductosBotellas from './src/screens/ProductosBotellas';
-<<<<<<< HEAD
 import ProductoCerveza from './src/screens/ProductoCerveza';
 import Carrito from './src/screens/Carrito';
-=======
 import UsuariosDetalles from './src/screens/UsuariosDetalles';
 import UsuariosLista from './src/screens/UsuariosLista';
 import AdminPrincipal from './src/screens/AdminPrincipal';
@@ -20,7 +18,6 @@ import CervezasLista from './src/screens/CervezasLista';
 import CervezasDetalles from './src/screens/CervezasDetalles';
 
 
->>>>>>> c4fbb8bb7b89d8a215ce876942551ba5571f3d83
 export default function App() {
   const Stack = createStackNavigator();
   function MyStack() {
@@ -91,13 +88,6 @@ export default function App() {
             headerTintColor: "white",
           }}
         />
-<<<<<<< HEAD
-        <Stack.Screen
-          name="ProductoCerveza"
-          component={ProductoCerveza}
-          options={{
-            title: "Comprar cerveza",
-=======
 
 
         <Stack.Screen
@@ -105,32 +95,22 @@ export default function App() {
           component={UsuariosLista}
           options={{
             title: "Lista de Usuarios",
->>>>>>> c4fbb8bb7b89d8a215ce876942551ba5571f3d83
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#e40f0f" },
             headerTintColor: "white",
           }}
         />
 
-        <Stack.Screen
-<<<<<<< HEAD
+      <Stack.Screen
           name="Carrito"
           component={Carrito}
           options={{
             title: "Carrito",
-=======
-          name="UsuariosDetalles"
-          component={UsuariosDetalles}
-          options={{
-            title: "Detalles de usuarios",
->>>>>>> c4fbb8bb7b89d8a215ce876942551ba5571f3d83
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#e40f0f" },
             headerTintColor: "white",
           }}
         />
-<<<<<<< HEAD
-=======
 
       <Stack.Screen
           name="AdminPrincipal"
@@ -165,7 +145,6 @@ export default function App() {
         />
 
 
->>>>>>> c4fbb8bb7b89d8a215ce876942551ba5571f3d83
       </Stack.Navigator>
     );
   }
