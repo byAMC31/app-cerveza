@@ -9,6 +9,13 @@ import SignUp from './src/screens/SignUp';
 import HomeCliente from './src/screens/HomeCliente';
 import ProductosCervezas from './src/screens/ProductosCervezas';
 import ProductosBotellas from './src/screens/ProductosBotellas';
+import UsuariosDetalles from './src/screens/UsuariosDetalles';
+import UsuariosLista from './src/screens/UsuariosLista';
+import AdminPrincipal from './src/screens/AdminPrincipal';
+import CervezasLista from './src/screens/CervezasLista';
+import CervezasDetalles from './src/screens/CervezasDetalles';
+
+
 export default function App() {
   const Stack = createStackNavigator();
   function MyStack() {
@@ -79,6 +86,63 @@ export default function App() {
             headerTintColor: "white",
           }}
         />
+
+
+        <Stack.Screen
+          name="UsuariosLista"
+          component={UsuariosLista}
+          options={{
+            title: "Lista de Usuarios",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+        <Stack.Screen
+          name="UsuariosDetalles"
+          component={UsuariosDetalles}
+          options={{
+            title: "Detalles de usuarios",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+      <Stack.Screen
+          name="AdminPrincipal"
+          component={AdminPrincipal}
+          options={{
+            title: "Admistrador",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+      <Stack.Screen
+          name="CervezasLista"
+          component={CervezasLista}
+          options={{
+            title: "Lista de cervezas",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="CervezasDetalles"
+          component={CervezasDetalles}
+          options={{
+            title: "Detalles de cerveza",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+
       </Stack.Navigator>
     );
   }
