@@ -7,7 +7,6 @@ import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc, setD
 const db = getFirestore(appFirebase)
 
 import { ListItem, Avatar } from '@rneui/themed';
-import { ListItemChevron } from '@rneui/base/dist/ListItem/ListItem.Chevron.js';
 import { ListItemContent } from '@rneui/base/dist/ListItem/ListItem.Content.js';
 import { ListItemTitle } from '@rneui/base/dist/ListItem/ListItem.Title.js';
 
@@ -55,7 +54,9 @@ export default function ProductosCervezas(props) {
                             <Image source={{ uri: cerveza.img }} style={styles.img} />
                             <ListItemTitle>{cerveza.nombre}</ListItemTitle>
                             <Text>${cerveza.precio},00</Text>
-                            <TouchableOpacity style={styles.boton} >
+                            <TouchableOpacity style={styles.boton} onPress={()=>{props.navigation.navigate('ProductoCerveza',{
+                                idProducto : cerveza.id
+                            })}}>
                                 <Text style={styles.textoBoton}>Comprar</Text>
                             </TouchableOpacity>
                         </ListItemContent>

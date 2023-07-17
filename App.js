@@ -9,6 +9,8 @@ import SignUp from './src/screens/SignUp';
 import HomeCliente from './src/screens/HomeCliente';
 import ProductosCervezas from './src/screens/ProductosCervezas';
 import ProductosBotellas from './src/screens/ProductosBotellas';
+import ProductoCerveza from './src/screens/ProductoCerveza';
+import Carrito from './src/screens/Carrito';
 export default function App() {
   const Stack = createStackNavigator();
   function MyStack() {
@@ -74,6 +76,27 @@ export default function App() {
           component={ProductosBotellas}
           options={{
             title: "Botellas",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="ProductoCerveza"
+          component={ProductoCerveza}
+          options={{
+            title: "Comprar cerveza",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+        <Stack.Screen
+          name="Carrito"
+          component={Carrito}
+          options={{
+            title: "Carrito",
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#e40f0f" },
             headerTintColor: "white",
