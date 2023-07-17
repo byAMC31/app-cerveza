@@ -13,6 +13,7 @@ import UsuariosDetalles from './src/screens/UsuariosDetalles';
 import UsuariosLista from './src/screens/UsuariosLista';
 import AdminPrincipal from './src/screens/AdminPrincipal';
 import CervezasLista from './src/screens/CervezasLista';
+import CervezasDetalles from './src/screens/CervezasDetalles';
 
 
 export default function App() {
@@ -125,6 +126,16 @@ export default function App() {
           component={CervezasLista}
           options={{
             title: "Lista de cervezas",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="CervezasDetalles"
+          component={CervezasDetalles}
+          options={{
+            title: "Detalles de cerveza",
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#e40f0f" },
             headerTintColor: "white",

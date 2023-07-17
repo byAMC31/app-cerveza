@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity,TouchableHighlight } from 'react-native'
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
-
+import Toast from 'react-native-toast-message';
 import appFirebase from '../credenciales.js';
 import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc, setDoc } from 'firebase/firestore'
+import { useNavigation } from '@react-navigation/native';
+
 const db = getFirestore(appFirebase)
 
 import { ListItem, Avatar } from '@rneui/themed';
@@ -12,6 +14,7 @@ import { ListItemContent } from '@rneui/base/dist/ListItem/ListItem.Content.js';
 import { ListItemTitle } from '@rneui/base/dist/ListItem/ListItem.Title.js';
 
 export default function CervezasLista(props) {
+    const navigation = useNavigation();
     const [lista, setLista] = useState([])
 
     // Logica para llamar la lista de documentos 
@@ -45,25 +48,33 @@ export default function CervezasLista(props) {
 
     return (
         <ScrollView>
-            <View style={styles.contenedor}>{
-                lista.map((cerveza) => (
+      
+      {lista.map((cerveza) => (
+        <ListItem
+          key={cerveza.id}
+          bottomDivider
+          onPress={() => {
+            navigation.navigate('CervezasDetalles', {
+                
+            });
+          }}
+        >
+          <ListItem.Chevron />
+          <Avatar
+            rounded
+            source={{ uri: cerveza.img }}
+          />
+          <ListItem.Content>
+            <ListItem.Title>Nombre: {cerveza.nombre}</ListItem.Title>
+            <ListItem.Subtitle>Precio: {cerveza.precio}</ListItem.Subtitle>
+           
+          </ListItem.Content>
+        </ListItem>
+      ))}
 
-
-                    <ListItem bottomDivider key={cerveza.id}>
-
-                        <ListItemContent>
-                            <Image source={{ uri: cerveza.img }} style={styles.img} />
-                            <ListItemTitle>{cerveza.nombre}</ListItemTitle>
-                            <Text>${cerveza.precio},00</Text>
-                            <TouchableOpacity style={styles.boton} >
-                                <Text style={styles.textoBoton}>Comprar</Text>
-                            </TouchableOpacity>
-                        </ListItemContent>
-                    </ListItem>
-                ))}
-            </View>
-
-        </ScrollView>
+        {/* <Toast ref={(ref) => Toast.setRef(ref)} /> */}
+<Toast />
+    </ScrollView>
 
 
     );

@@ -37,7 +37,7 @@ const AdminPrincipal = ({ navigation }) => {
         <ListItem.Chevron />
         <Avatar
           rounded
-          source={{ uri: 'https://www.opportimes.com/wp-content/uploads/2022/02/cerveza-Constellations-Brands.png' }}
+          source={{ uri: 'https://m.media-amazon.com/images/I/71AA29nFw3L._AC_SX679_.jpg' }}
         />
         <ListItem.Content>
           <ListItem.Title>Cervezas</ListItem.Title>
