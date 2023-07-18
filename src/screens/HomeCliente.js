@@ -6,6 +6,11 @@ export default function Login(props) {
     return (
         <ScrollView>
             <View style={styles.contenedorPadre}>
+
+                <TouchableOpacity style={styles.boton} onPress={() => props.navigation.navigate('Carrito')}>
+                    <Text style={styles.textoBoton}>Carrito</Text>
+                </TouchableOpacity>
+
                 <Text>Escoje el tipo de bebida</Text>
                 <View style={styles.tarjeta}>
                     <View style={styles.contenedor}>
@@ -80,9 +85,9 @@ const styles = StyleSheet.create({
     logo: {
         width: 213,
         height: 120,
-        marginBottom:20,
-        marginLeft:18,
-      },
+        marginBottom: 20,
+        marginLeft: 18,
+    },
 
 });
 

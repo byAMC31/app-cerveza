@@ -9,6 +9,8 @@ import SignUp from './src/screens/SignUp';
 import HomeCliente from './src/screens/HomeCliente';
 import ProductosCervezas from './src/screens/ProductosCervezas';
 import ProductosBotellas from './src/screens/ProductosBotellas';
+import ProductoCerveza from './src/screens/ProductoCerveza';
+import Carrito from './src/screens/Carrito';
 import UsuariosDetalles from './src/screens/UsuariosDetalles';
 import UsuariosLista from './src/screens/UsuariosLista';
 import AdminPrincipal from './src/screens/AdminPrincipal';
@@ -88,6 +90,17 @@ export default function App() {
           }}
         />
 
+<Stack.Screen
+          name="ProductoCerveza"
+          component={ProductoCerveza}
+          options={{
+            title: "Cerveza",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
 
         <Stack.Screen
           name="UsuariosLista"
@@ -100,11 +113,11 @@ export default function App() {
           }}
         />
 
-        <Stack.Screen
-          name="UsuariosDetalles"
-          component={UsuariosDetalles}
+      <Stack.Screen
+          name="Carrito"
+          component={Carrito}
           options={{
-            title: "Detalles de usuarios",
+            title: "Carrito",
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#e40f0f" },
             headerTintColor: "white",
