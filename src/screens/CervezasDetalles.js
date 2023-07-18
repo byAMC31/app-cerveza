@@ -6,9 +6,10 @@ import Toast from 'react-native-toast-message';
 
 const CervezasDetalles = ({ navigation, route }) => {
   const [cerveza, setCerveza] = useState(null);
+  const [existencia, setExistencia] = useState('');
   const [nombre, setNombre] = useState('');
   const [precio, setPrecio] = useState('');
-  
+
 
   useEffect(() => {
     const getCervezaById = async () => {
@@ -27,6 +28,7 @@ const CervezasDetalles = ({ navigation, route }) => {
         }
 
         setCerveza({ id: cervezaSnapshot.id, ...cervezaSnapshot.data() });
+        setExistencia(cervezaSnapshot.data().existencia);
         setNombre(cervezaSnapshot.data().nombre);
         setPrecio(cervezaSnapshot.data().precio);
 
@@ -66,10 +68,9 @@ const CervezasDetalles = ({ navigation, route }) => {
       const cervezaRef = doc(db, 'cervezas', cerveza.id);
 
       await updateDoc(cervezaRef, {
-       
+        existencia: existencia,
         nombre: nombre,
         precio: precio,
-
     });
 
       console.log('Cerveza actualizada correctamente');
@@ -111,6 +112,8 @@ const CervezasDetalles = ({ navigation, route }) => {
           <TextInput style={styles.input} value={nombre} onChangeText={(text) => setNombre(text)} />
           <Text style={styles.label}>Precio:</Text>
           <TextInput style={styles.input} value={precio} onChangeText={(text) => setPrecio(text)} />
+          <Text style={styles.label}>Existencias:</Text>
+          <TextInput style={styles.input} value={existencia.toString()} onChangeText={(text) => setExistencia(text)} />
           
           <TouchableHighlight style={styles.buttonContainer} onPress={handleActualizar} underlayColor="#50B91E">
             <Text style={styles.buttonText}>Actualizar</Text>
