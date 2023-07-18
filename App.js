@@ -14,6 +14,7 @@ import UsuariosLista from './src/screens/UsuariosLista';
 import AdminPrincipal from './src/screens/AdminPrincipal';
 import CervezasLista from './src/screens/CervezasLista';
 import CervezasDetalles from './src/screens/CervezasDetalles';
+import CervezasAgregar from './src/screens/CervezasAgregar';
 
 
 export default function App() {
@@ -142,6 +143,16 @@ export default function App() {
           }}
         />
 
+      <Stack.Screen
+          name="CervezasAgregar"
+          component={CervezasAgregar}
+          options={{
+            title: "Agregar una cerveza",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
 
       </Stack.Navigator>
     );

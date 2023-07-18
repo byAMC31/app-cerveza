@@ -18,7 +18,7 @@ export default function Principal(props) {
         <View style={styles.container_logo}>
           <Image
             style={styles.logo}
-            source={require("../img/logo_principal.jpg")}
+            source={require("../img/logo_principal2.png")}
           />
         </View>
 
@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   logo: {
-    width: 210,
-    height: 120,
+    width: 260,
+    height: 170,
     marginTop:200
   },
   // Contenedor de botones
