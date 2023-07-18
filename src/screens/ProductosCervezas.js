@@ -44,10 +44,9 @@ export default function ProductosCervezas(props) {
 
     return (
         <ScrollView>
-            <View style={styles.contenedor}>{
+            <View style={styles.contenedor}>
+                {
                 lista.map((cerveza) => (
-
-
                     <ListItem bottomDivider key={cerveza.id}>
 
                         <ListItemContent>
@@ -61,7 +60,8 @@ export default function ProductosCervezas(props) {
                             </TouchableOpacity>
                         </ListItemContent>
                     </ListItem>
-                ))}
+                ))
+                }
             </View>
 
         </ScrollView>

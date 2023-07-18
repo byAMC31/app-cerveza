@@ -7,6 +7,7 @@ import {
     Image,
     TouchableOpacity,
     Picker,
+    Alert
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
@@ -23,27 +24,35 @@ import {
 } from "firebase/firestore";
 const db = getFirestore(appFirebase);
 
-export default function ProductoEspecifico(props) {
+export default function ProductoCerveza(props) {
     //Variable para buscar informacion de producto
     const [producto, setProducto] = useState({});
 
-    const [cantidad, setCantidad] = useState(1);
+    //Variable para cantidad a pedir
+    const [cantidadPedir, setCantidadPedir] = useState(1);
 
+    let existenciaProducto = 0;
+    
+    
     const sumar = () => {
-        const nueva_cantidad= parseInt(cantidad + 1);
-        setCantidad(nueva_cantidad);
+        
+        existenciaProducto = producto.existencia
+        if (cantidadPedir < existenciaProducto) {
+            const nueva_cantidad = parseInt(cantidadPedir + 1);
+            setCantidadPedir(nueva_cantidad);
+        }
     };
 
     const restar = () => {
-        if(cantidad > 1) {
-            const nueva_cantidad= parseInt(cantidad - 1);
-            setCantidad(nueva_cantidad);
+        if (cantidadPedir > 1) {
+            const nueva_cantidad = parseInt(cantidadPedir - 1);
+            setCantidadPedir(nueva_cantidad);
         }
     };
-    
-    const handleCantidadChange = (value) => {
-        setCantidad(value);
-        console.log(cantidad);
+
+    const handleCantidadPedirChange = (value) => {
+        setCantidadPedir(value);
+        console.log(cantidadPedir);
     };
 
     // Obtengo un producto en base al id del producto en la cerveza
@@ -53,7 +62,7 @@ export default function ProductoEspecifico(props) {
             const docSnap = await getDoc(docRef);
             setProducto(docSnap.data());
         } catch (error) {
-            console.log("Error");
+            console.log("Error getOneProduct " + error.message);
         }
     };
 
@@ -61,7 +70,23 @@ export default function ProductoEspecifico(props) {
         getOneProduct(props.route.params.idProducto);
     }, []);
 
-    //   const id = props.route.params.productoId
+    const saveProducto = async() =>{
+        try {
+            const productoGenerado = {
+              cantidad: cantidadPedir,
+              precio: producto.precio,
+              nombre: producto.nombre
+            }
+            await addDoc(collection(db,'usuarios',"VWDAjmJxzXkaf0OY03SM", "carrito"),{
+              ...productoGenerado
+            })
+            Alert.alert('Producto añadido','¡Producto agregado al carrito!')
+            props.navigation.navigate('ProductosCervezas')
+          
+        } catch (error) {
+          console.log(error);
+        }
+      }
 
     return (
         <View style={styles.contenedorPadre}>
@@ -81,7 +106,7 @@ export default function ProductoEspecifico(props) {
                         <Text style={styles.texto_cantidad}>-</Text>
                     </TouchableOpacity>
 
-                    <TextInput style={styles.texto_input} value={cantidad.toString()} onChange={handleCantidadChange}></TextInput>
+                    <TextInput style={styles.texto_input} value={cantidadPedir.toString()} onChange={handleCantidadPedirChange}></TextInput>
 
                     <TouchableOpacity style={styles.boton_cantidad} onPress={sumar}>
                         <Text style={styles.texto_cantidad}>+</Text>
@@ -89,7 +114,7 @@ export default function ProductoEspecifico(props) {
                 </View>
             </View>
 
-            <TouchableOpacity style={styles.boton}>
+            <TouchableOpacity style={styles.boton} onPress={saveProducto} >
                 <Text style={styles.textoBoton}>Añadir al carrito</Text>
             </TouchableOpacity>
         </View>
@@ -105,7 +130,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        
+
     },
     tarjeta: {
         margin: 15,
@@ -140,7 +165,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     boton_cantidad: {
-        width:100,
+        width: 100,
         backgroundColor: "#e40f0f",
         borderColor: "#e40f0f",
         borderWidth: 2,
@@ -162,13 +187,13 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     texto_input: {
-        textAlign:"center",
+        textAlign: "center",
         borderColor: "slategray",
         borderWidth: 1,
         padding: 5,
         marginTop: 5,
         borderRadius: 8,
-        fontSize:20
+        fontSize: 20
     },
     texto_cerveza: {
         fontSize: 19,

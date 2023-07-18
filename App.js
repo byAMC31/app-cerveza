@@ -89,6 +89,17 @@ export default function App() {
           }}
         />
 
+<Stack.Screen
+          name="ProductoCerveza"
+          component={ProductoCerveza}
+          options={{
+            title: "Cerveza",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
 
         <Stack.Screen
           name="UsuariosLista"
