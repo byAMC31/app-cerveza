@@ -9,6 +9,7 @@ export default function Login(props) {
             <View style={styles.contenedorPadre}>
 
                 <View style={styles.icono_contenedor}>
+                    
                     <TouchableOpacity style={styles.boton_carrito} onPress={() => props.navigation.navigate('Carrito')}>
                         <Icon
                             style={styles.icono}
@@ -21,12 +22,12 @@ export default function Login(props) {
                 </View>
 
 
-                <Text style={styles.texto_tipo_bebida}>Escoje el tipo de bebida</Text>
+                <Text style={styles.texto_bienvenida}>¡Seleccione el tipo de bebida!</Text>
 
                 <View style={styles.tarjeta}>
                     <View style={styles.contenedor}>
-                        <Image style={styles.logo} source={require("../img/cervezas.jpg")} />
-                        <Text style={styles.texto_bienvenido}>Cervezas</Text>
+                        <Image style={styles.img} source={require("../img/cervezas.jpg")} />
+                        <Text style={styles.texto_categoria}>Cervezas</Text>
                         <TouchableOpacity style={styles.boton} onPress={() => props.navigation.navigate('ProductosCervezas')}>
                             <Text style={styles.textoBoton}>Comprar</Text>
                         </TouchableOpacity>
@@ -37,8 +38,8 @@ export default function Login(props) {
                 <View style={styles.tarjeta}>
                     <View style={styles.contenedor}>
 
-                        <Image style={styles.logo} source={require("../img/botellas.png")} />
-                        <Text style={styles.texto_bienvenido}>Botellas</Text>
+                        <Image style={styles.img} source={require("../img/botellas.png")} />
+                        <Text style={styles.texto_categoria}>Botellas</Text>
 
                         <TouchableOpacity style={styles.boton} onPress={() => props.navigation.navigate('ProductosBotellas')}>
                             <Text style={styles.textoBoton}>Comprar</Text>
@@ -74,9 +75,6 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 5
     },
-    texto_tipo_bebida:{
-        textAlign: 'center',
-    },
     contenedor: {
         padding: 20
     },
@@ -95,13 +93,14 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 16,
     },
-    logo: {
+    img: {
         width: 213,
-        height: 120,
+        height: 165,
         marginBottom: 20,
         marginLeft: 18,
     },
     icono_contenedor: {
+        flexDirection:'row',
         flex: 1,
         justifyContent: "flex-end", // Alineación vertical al centro
         alignItems: "flex-end", // Alineación horizontal al centro
@@ -119,6 +118,15 @@ const styles = StyleSheet.create({
     icono: {
         padding: 8,
     },
-
+    texto_bienvenida:{
+        textAlign:'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    texto_categoria:{
+        textAlign:'center',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
 });
 

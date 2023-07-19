@@ -43,6 +43,7 @@ export default function Login(props) {
   
       
     }
+    // props.navigation.navigate('HomeCliente');
   };
 
   return (

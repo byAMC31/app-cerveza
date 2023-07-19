@@ -51,8 +51,8 @@ export default function ProductosBotellas(props) {
 
                         <ListItemContent>
                             <Image source={{ uri: botella.img }} style={styles.img} />
-                            <ListItemTitle>{botella.nombre}</ListItemTitle>
-                            <Text>${botella.precio},00</Text>
+                            <Text style={styles.texto_producto}>{botella.nombre}</Text>
+                            <Text style={styles.texto_precio}>${botella.precio},00</Text>
                             <TouchableOpacity style={styles.boton} onPress={()=>{props.navigation.navigate('ProductoBotella',{
                                 idProducto : botella.id
                             })}}>
@@ -84,7 +84,8 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 5
+        elevation: 5,
+        
     }
     ,
     boton: {
@@ -92,9 +93,9 @@ const styles = StyleSheet.create({
         borderColor: "#e40f0f",
         borderWidth: 2,
         borderRadius: 20,
-        marginLeft: 20,
+        marginLeft: 80,
         marginRight: 20,
-        marginTop: 20,
+        marginTop: 10,
     },
     textoBoton: {
         textAlign: "center",
@@ -108,5 +109,16 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginLeft: 18,
     },
-
+    texto_producto:{
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 15
+    },
+    texto_precio:{
+        fontSize: 17,
+        marginBottom: 5,
+        color: "#e40f0f",
+        fontWeight: "bold",
+        marginLeft: 96
+    },
 });
