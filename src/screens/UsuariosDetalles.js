@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Text, TextInput, Button, StyleSheet, Alert,TouchableHighlight } from 'react-native';
+import { View, ScrollView, Text, TextInput, Button, StyleSheet, Alert, TouchableHighlight } from 'react-native';
 import { getFirestore, collection, getDocs, query, where, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { getAuth, deleteUser as deleteAuthUser } from 'firebase/auth';
 import credenciales from '../credenciales';
 import Toast from 'react-native-toast-message';
 
@@ -93,10 +94,29 @@ const UsuariosDetalles = ({ navigation, route }) => {
   const eliminarUsuario = async () => {
     try {
       const db = getFirestore(credenciales.appFirebase);
-      const usuarioRef = doc(db, 'usuarios', usuario.id);
-
+  
+      // Buscar el usuario por su email
+      const usuariosRef = collection(db, 'usuarios');
+      const q = query(usuariosRef, where('email', '==', email));
+      const querySnapshot = await getDocs(q);
+  
+      if (querySnapshot.size === 0) {
+        console.log('No se encontró ningún usuario con ese email.');
+        return;
+      }
+  
+      // Obtener el UID del usuario
+      const uid = querySnapshot.docs[0].data().uid;
+  
+      // Eliminar el usuario de la base de datos Firestore
+      const usuarioId = querySnapshot.docs[0].id;
+      const usuarioRef = doc(db, 'usuarios', usuarioId);
       await deleteDoc(usuarioRef);
-
+  
+      // Eliminar el usuario de Firebase Authentication
+      const auth = getAuth();
+      await deleteAuthUser(auth, uid);
+  
       console.log('Usuario eliminado correctamente');
       navigation.navigate('UsuariosLista');
     } catch (error) {

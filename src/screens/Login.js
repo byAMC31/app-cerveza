@@ -1,16 +1,47 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity, Alert, Platform } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import { getAuth, signInWithEmailAndPassword, AuthErrorCodes } from 'firebase/auth';
+import appFirebase from '../credenciales'; // Import the Firebase app instance
 
 export default function Login(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
 
-  const handleLogin = () => {
-    if (email === 'admin@gmail.com' && password === '123456') {
-      props.navigation.navigate('AdminPrincipal');
-    } else {
-      props.navigation.navigate('HomeCliente');
+  const handleLogin = async () => {
+    try {
+      // Sign in the user with email and password
+      const auth = getAuth();
+      await signInWithEmailAndPassword(auth, email, password);
+  
+      // Redirect the user to the appropriate screen based on their credentials
+      if (email === 'admin@gmail.com' && password === '123456') {
+        props.navigation.navigate('AdminPrincipal');
+      } else {
+        props.navigation.navigate('HomeCliente');
+      }
+    } catch (error) {
+      // Traducir los errores específicos de Firebase al español
+      switch (error.code) {
+        case 'auth/invalid-email':
+          Alert.alert('Correo electrónico inválido');
+          break;
+        case 'auth/wrong-password':
+          Alert.alert('Contraseña incorrecta');
+          break;
+        case 'auth/user-not-found':
+          Alert.alert('Usuario no encontrado');
+          break;
+          case 'auth/missing-password':
+            Alert.alert('Ingresa una contraseña, el campo esta vacio');
+            break;
+        // Agrega más casos según las necesidades
+        default:
+          Alert.alert('Error de inicio de sesión: ' + error.message);
+      }
+  
+      
     }
   };
 

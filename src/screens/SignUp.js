@@ -1,48 +1,68 @@
-import React, { useState, useEffect } from 'react'
-import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity, Alert } from 'react-native'
+import React, { useState } from 'react';
+import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity, Alert } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import appFirebase from '../credenciales.js';
+import { getFirestore, collection, addDoc,setDoc,doc } from 'firebase/firestore';
 
-import  appFirebase from '../credenciales.js';
-import {getFirestore,collection,addDoc,getDocs,doc,deleteDoc,getDoc,setDoc} from 'firebase/firestore'
-const db = getFirestore(appFirebase)
+const db = getFirestore(appFirebase);
 
 export default function SignUp(props) {
   // Variables para capturar los datos
   const initialState = {
-    nombre : '',
-    email : '',
-    password : '',
-    edad : ''
+    nombre: '',
+    email: '',
+    password: '',
+    edad: ''
   }
 
-  const [estado,setEstado] = useState(initialState);
+  const [estado, setEstado] = useState(initialState);
 
   // Funcion para que no se sobrescriba
-  const handleChangeText = (value,name) =>{
-    setEstado({...estado, [name]:value});
+  const handleChangeText = (value, name) => {
+    setEstado({ ...estado, [name]: value });
   }
-  
-  const saveUser = async() =>{
 
+  // Función para crear un nuevo usuario en Firebase Authentication
+  const signUpUser = async () => {
     try {
-      if(estado.edad === '' || estado.email === ''|| estado.nombre==='' || estado.password===''){
-        Alert.alert('Mensaje importante','Debes rellenar los campos requeridos')
-      }
-      else{
+      if (estado.edad === '' || estado.email === '' || estado.nombre === '' || estado.password === '') {
+        Alert.alert('Mensaje importante', 'Debes rellenar los campos requeridos');
+      } else {
         const usuario = {
           nombre: estado.nombre,
           email: estado.email,
           password: estado.password,
-          edad: estado.edad
-        }
-        await addDoc(collection(db,'usuarios'),{
-          ...usuario
-        })
-        Alert.alert('Registro exitoso','¡Usuario registrado con exito!')
-        props.navigation.navigate('Principal')
+          edad: estado.edad,
+        };
+  
+        // Crear el usuario en Firebase Authentication
+        const auth = getAuth();
+        const { user } = await createUserWithEmailAndPassword(auth, estado.email, estado.password);
+  
+        // Utiliza setDoc para agregar el usuario con el UID como ID del documento en Firestore
+        await setDoc(doc(db, 'usuarios', user.uid), usuario);
+  
+        Alert.alert('Registro exitoso', '¡Usuario registrado con éxito!');
+        props.navigation.navigate('Principal');
       }
     } catch (error) {
-      
+
+      switch (error.code) {
+        case 'auth/invalid-email':
+          Alert.alert('Correo electrónico inválido');
+          break;
+          case 'auth/weak-password':
+          Alert.alert('La contraseña debe de tener minimo 6 caracteres');
+          break;
+       
+        default:
+          Alert.alert('Error', 'Hubo un error al registrar el usuario. Por favor, inténtalo de nuevo.');
+          console.log(error)
+
+        }
+
+
     }
   }
 
@@ -51,24 +71,20 @@ export default function SignUp(props) {
       <View style={styles.contenedorPadre}>
         <View style={styles.tarjeta}>
           <View style={styles.contenedor}>
-            
             <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
             <Text style={styles.texto_bienvenido}>Bienvenido a DrinkNet</Text>
-            <TextInput placeholder='Nombre' style={styles.texto_input} value={estado.nombre} onChangeText={(value)=>handleChangeText(value,'nombre')}/>
-            <TextInput placeholder='E-mail' style={styles.texto_input} value={estado.email} onChangeText={(value)=>handleChangeText(value,'email')}/>
-            <TextInput placeholder='Password' style={styles.texto_input} secureTextEntry={true} value={estado.password} onChangeText={(value)=>handleChangeText(value,'password')}/>
-            <TextInput placeholder='Edad' style={styles.texto_input} value={estado.edad} onChangeText={(value)=>handleChangeText(value,'edad')}/>
+            <TextInput placeholder='Nombre' style={styles.texto_input} value={estado.nombre} onChangeText={(value) => handleChangeText(value, 'nombre')} />
+            <TextInput placeholder='E-mail' style={styles.texto_input} value={estado.email} onChangeText={(value) => handleChangeText(value, 'email')} />
+            <TextInput placeholder='Password' style={styles.texto_input} secureTextEntry={true} value={estado.password} onChangeText={(value) => handleChangeText(value, 'password')} />
+            <TextInput placeholder='Edad' style={styles.texto_input} value={estado.edad} onChangeText={(value) => handleChangeText(value, 'edad')} />
 
-
-            <TouchableOpacity style={styles.boton} onPress={saveUser} >
+            <TouchableOpacity style={styles.boton} onPress={signUpUser} >
               <Text style={styles.textoBoton}>Sign Up</Text>
             </TouchableOpacity>
 
           </View>
-        </View>        
+        </View>
       </View>
-
-
     </ImageBackground>
   );
 }
@@ -78,34 +94,34 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover", // Ajusta la imagen al tamaño del contenedor
   },
-  contenedorPadre:{
+  contenedorPadre: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-  tarjeta:{
-    margin:20,
-    backgroundColor:"white",
-    borderRadius:20,
-    width:'90%',
-    padding:20,
-    shadowColor:'#000',
-    shadowOffset:{
-      width:0,
-      height:2
+  tarjeta: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    width: '90%',
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
     },
-    shadowOpacity:0.25,
-    shadowRadius:4,
-    elevation:5
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
   },
-  contenedor:{
-    padding:20
+  contenedor: {
+    padding: 20
   },
   logo: {
     width: 213,
     height: 120,
-    marginBottom:20,
-    marginLeft:18,
+    marginBottom: 20,
+    marginLeft: 18,
   },
   boton: {
     backgroundColor: "#e40f0f",
@@ -127,14 +143,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     marginTop: 10,
-    borderRadius:8
+    borderRadius: 8
   },
-  texto_bienvenido:{
+  texto_bienvenido: {
     fontSize: 19,
     fontWeight: "bold",
-    marginLeft:26,
-    marginBottom:5
+    marginLeft: 26,
+    marginBottom: 5
   }
-
 });
-

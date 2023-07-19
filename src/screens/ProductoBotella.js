@@ -10,6 +10,7 @@ import {
     Alert
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 import appFirebase from "../credenciales.js";
 import {
@@ -77,7 +78,12 @@ export default function ProductoBotella(props) {
               precio: producto.precio,
               nombre: producto.nombre
             }
-            await addDoc(collection(db,'usuarios',"VWDAjmJxzXkaf0OY03SM", "carrito"),{
+            // 2. Usa getAuth() para obtener la instancia de autenticación
+            const auth = getAuth();
+            // 3. Recuperar la ID del usuario actualmente autenticado
+            const userId = auth.currentUser?.uid;
+        
+            await addDoc(collection(db,'usuarios',userId, "carrito"),{
               ...productoGenerado
             })
             Alert.alert('Producto añadido','¡Producto agregado al carrito!')
