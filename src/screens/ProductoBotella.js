@@ -24,7 +24,7 @@ import {
 } from "firebase/firestore";
 const db = getFirestore(appFirebase);
 
-export default function ProductoCerveza(props) {
+export default function ProductoBotella(props) {
     //Variable para buscar informacion de producto
     const [producto, setProducto] = useState({});
 
@@ -58,7 +58,7 @@ export default function ProductoCerveza(props) {
     // Obtengo un producto en base al id del producto en la cerveza
     const getOneProduct = async (id) => {
         try {
-            const docRef = doc(db, "cervezas", id);
+            const docRef = doc(db, "botellas", id);
             const docSnap = await getDoc(docRef);
             setProducto(docSnap.data());
         } catch (error) {
