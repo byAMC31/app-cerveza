@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity } from 'react-native'
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function Login(props) {
     return (
         <ScrollView>
             <View style={styles.contenedorPadre}>
 
-                <TouchableOpacity style={styles.boton} onPress={() => props.navigation.navigate('Carrito')}>
-                    <Text style={styles.textoBoton}>Carrito</Text>
-                </TouchableOpacity>
+                <View style={styles.icono_contenedor}>
+                    <TouchableOpacity style={styles.boton_carrito} onPress={() => props.navigation.navigate('Carrito')}>
+                        <Icon
+                            style={styles.icono}
+                            name="shopping-cart"
+                            size={30}
+                            color="white"
+                        />
+                    </TouchableOpacity>
 
-                <Text>Escoje el tipo de bebida</Text>
+                </View>
+
+
+                <Text style={styles.texto_tipo_bebida}>Escoje el tipo de bebida</Text>
+
                 <View style={styles.tarjeta}>
                     <View style={styles.contenedor}>
                         <Image style={styles.logo} source={require("../img/cervezas.jpg")} />
@@ -46,8 +57,7 @@ export default function Login(props) {
 const styles = StyleSheet.create({
     contenedorPadre: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        marginRight:8
     },
     tarjeta: {
         margin: 20,
@@ -63,6 +73,9 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
+    },
+    texto_tipo_bebida:{
+        textAlign: 'center',
     },
     contenedor: {
         padding: 20
@@ -87,6 +100,24 @@ const styles = StyleSheet.create({
         height: 120,
         marginBottom: 20,
         marginLeft: 18,
+    },
+    icono_contenedor: {
+        flex: 1,
+        justifyContent: "flex-end", // Alineación vertical al centro
+        alignItems: "flex-end", // Alineación horizontal al centro
+        marginRight: 15, // Espacio adicional si es necesario
+        // backgroundColor: "black", 
+    },
+    boton_carrito: {
+        backgroundColor: "#e40f0f",
+        borderColor: "#e40f0f",
+        borderWidth: 2,
+        borderRadius: 15,
+        marginLeft: 10,
+        marginTop: 15,
+    },
+    icono: {
+        padding: 8,
     },
 
 });

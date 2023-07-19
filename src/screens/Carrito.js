@@ -6,6 +6,7 @@ import {
     ImageBackground,
     Image,
     TouchableOpacity,
+    Alert
 } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { getAuth } from 'firebase/auth';
@@ -27,86 +28,166 @@ import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content.js";
 import { ListItemTitle } from "@rneui/base/dist/ListItem/ListItem.Title.js";
 import Icon from "react-native-vector-icons/FontAwesome";
 
+import MapView, { Marker, Polyline } from "react-native-maps";
+
+
 export default function Carrito(props) {
+    const [userIdLocal,setUserIdLocal] = useState(''); //id del usuario
     const [listaCarrito, setListaCarrito] = useState([]);
     const [montoTotal, setMontoTotal] = useState(0);
-    // Logica para llamar la lista de documentos
+    //Parte para la ubicacion
+    const [ubicacion, setUbicacion] = useState({
+        latitude: 17.062021,
+        longitude: -96.725982
+    });
+
+    //Parte para la ubicacion
 
     useEffect(() => {
         // 2. Usa getAuth() para obtener la instancia de autenticación
         const auth = getAuth();
         // 3. Recuperar la ID del usuario actualmente autenticado
         const userId = auth.currentUser?.uid;
-        
-        const getListaCarrito = async () => {
-          try {
+        setUserIdLocal(userId);
+        getListaCarrito(userId);
+    }, []);
+
+    const getListaCarrito = async (userId) => {
+        try {
             if (userId) {
-              const querySnapshot = await getDocs(
-                collection(db, "usuarios", userId, "carrito")
-              );
-              const docs = [];
-    
-              querySnapshot.forEach((doc) => {
-                const { cantidad, nombre, precio } = doc.data();
-                docs.push({
-                  id: doc.id,
-                  cantidad,
-                  nombre,
-                  precio,
-                });
-                console.log("" + precio);
-                setMontoTotal(
-                  (prevTotal) =>
-                    prevTotal + parseInt(precio) * parseInt(cantidad)
+                const querySnapshot = await getDocs(
+                    collection(db, "usuarios", userId, "carrito")
                 );
-              });
-              setListaCarrito(docs);
-              console.log("monto " + montoTotal);
+                const docs = [];
+
+                querySnapshot.forEach((doc) => {
+                    const { cantidad, nombre, precio } = doc.data();
+                    docs.push({
+                        id: doc.id,
+                        cantidad,
+                        nombre,
+                        precio,
+                    });
+                    console.log("" + precio);
+                    setMontoTotal(
+                        (prevTotal) =>
+                            prevTotal + parseInt(precio) * parseInt(cantidad)
+                    );
+                });
+                setListaCarrito(docs);
+                console.log("monto " + montoTotal);
             }
-          } catch (error) {
+        } catch (error) {
             console.log(error);
-          }
-        };
-        getListaCarrito();
-      }, []);
+        }
+    
+    };
+
+    const deleteProducto = async (id) => {
+        console.log(db+ " usuarios " + userIdLocal + " carrito " + id);
+        try {
+            Alert.alert(
+                "Eliminar producto",
+                "¿Estás seguro de eliminar el producto del carrito?",
+                [
+                    {
+                        text: "Cancelar",
+                        style: "cancel",
+                    },
+                    {
+                        text: "Eliminar",
+                        onPress: async () => {
+                            await deleteDoc(
+                                doc(db, "usuarios", userIdLocal, "carrito", id)
+                            );
+                            
+                            setMontoTotal(0);
+                            getListaCarrito(userIdLocal);
+                        },
+                    },
+                ],
+                { cancelable: false }
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const realizarPedido = () => {
+        console.log(ubicacion);
+    }
 
     return (
         <ScrollView>
             <View style={styles.contenedorPadre}>
-                <Text>Productos</Text>
-                {listaCarrito.map((producto) => (
-                    <View style={styles.tarjeta} key={producto.id}>
-                        <ListItem key={producto.id}>
-                            <ListItemContent>
-                                <Text style={styles.texto_producto}>{producto.nombre}</Text>
-                                <Text style={styles.texto_precio}>
-                                    Precio: ${producto.precio} c/u
-                                </Text>
-                                <Text style={styles.texto_precio}>
-                                    Cantidad: {producto.cantidad} pz(s)
-                                </Text>
-                            </ListItemContent>
-                        </ListItem>
-                        <View style={styles.icono_contenedor}>
-                            <TouchableOpacity style={styles.boton_eliminar_producto}>
-                                <Icon
-                                    style={styles.icono}
-                                    name="trash"
-                                    size={22}
-                                    color="white"
-                                />
-                            </TouchableOpacity>
-                        </View>
+                <Text style={styles.texto_producto}>Productos</Text>
+                {listaCarrito.length === 0 ? (
+                    <View style={styles.contenedor_carrito_vacio}>
+                        <Text>Aún no ha cargado ningún producto a su carrito</Text>
                     </View>
-                ))}
+                ) : (
+                    listaCarrito.map((producto) => (
+                        <View style={styles.tarjeta} key={producto.id}>
+                            <ListItem key={producto.id}>
+                                <ListItemContent>
+                                    <Text style={styles.texto_producto}>{producto.nombre}</Text>
+                                    <Text style={styles.texto_precio}>
+                                        Precio: ${producto.precio} c/u
+                                    </Text>
+                                    <Text style={styles.texto_precio}>
+                                        Cantidad: {producto.cantidad} pz(s)
+                                    </Text>
+                                </ListItemContent>
+                            </ListItem>
+                            <View style={styles.icono_contenedor}>
+                                <TouchableOpacity
+                                    style={styles.boton_eliminar_producto}
+                                    onPress={() => deleteProducto(producto.id)}
+                                >
+                                    <Icon
+                                        style={styles.icono}
+                                        name="trash"
+                                        size={22}
+                                        color="white"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    ))
+                )}
+            </View>
+
+
+
+            <View style={styles.contenedorPadre}>
+                <Text>Escoje la ubicación donde llegará tu pedido</Text>
+                <MapView
+                    style={styles.mapa}
+                    initialRegion={{
+                        latitude: ubicacion.latitude,
+                        longitude: ubicacion.longitude,
+                        latitudeDelta: 0.09,
+                        longitudeDelta: 0.04
+                    }}
+                    zoomEnabled={true}
+                    zoomControlEnabled={true}
+                    zoomTapEnabled={true}
+                >
+                    <Marker
+                        draggable
+                        coordinate={ubicacion}
+                        onDragEnd={(direction) => setUbicacion(direction.nativeEvent.coordinate)}
+                    />
+                </MapView>
             </View>
 
             <View style={styles.tarjeta_boton_pedido}>
                 <Text>Total a pagar: ${montoTotal.toString()},00</Text>
                 <TouchableOpacity style={styles.boton}>
-                    <Text style={styles.textoBoton}>Realizar pedido</Text>
+                    <Text style={styles.textoBoton} onPress={realizarPedido}>Realizar pedido</Text>
                 </TouchableOpacity>
             </View>
+
         </ScrollView>
     );
 }
@@ -116,6 +197,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+    },
+    contenedor_carrito_vacio: {
+        margin: 120,
     },
     icono_contenedor: {
         justifyContent: "center", // Alineación vertical al centro
@@ -187,5 +271,9 @@ const styles = StyleSheet.create({
     texto_precio: {
         color: "black",
         fontSize: 14,
-    }
+    },
+    mapa: {
+        width: 300,
+        height: 300,
+    },
 });
