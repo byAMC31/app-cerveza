@@ -1,12 +1,140 @@
 import React, { useState, useEffect } from 'react'
-import { Text, StyleSheet, View } from 'react-native'
+import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity, Alert } from 'react-native'
+import { TextInput } from 'react-native-gesture-handler';
 
-export default function SignUp()  {
-    return (
-      <View>
-        <Text> textInComponent </Text>
+import  appFirebase from '../credenciales.js';
+import {getFirestore,collection,addDoc,getDocs,doc,deleteDoc,getDoc,setDoc} from 'firebase/firestore'
+const db = getFirestore(appFirebase)
+
+export default function SignUp(props) {
+  // Variables para capturar los datos
+  const initialState = {
+    nombre : '',
+    email : '',
+    password : '',
+    edad : ''
+  }
+
+  const [estado,setEstado] = useState(initialState);
+
+  // Funcion para que no se sobrescriba
+  const handleChangeText = (value,name) =>{
+    setEstado({...estado, [name]:value});
+  }
+  
+  const saveUser = async() =>{
+
+    try {
+      if(estado.edad === '' || estado.email === ''|| estado.nombre==='' || estado.password===''){
+        Alert.alert('Mensaje importante','Debes rellenar los campos requeridos')
+      }
+      else{
+        const usuario = {
+          nombre: estado.nombre,
+          email: estado.email,
+          password: estado.password,
+          edad: estado.edad
+        }
+        await addDoc(collection(db,'usuarios'),{
+          ...usuario
+        })
+        Alert.alert('Registro exitoso','¡Usuario registrado con exito!')
+        props.navigation.navigate('Principal')
+      }
+    } catch (error) {
+      
+    }
+  }
+
+  return (
+    <ImageBackground source={require("../img/bg_login.jpg")} style={styles.backgroundImage}>
+      <View style={styles.contenedorPadre}>
+        <View style={styles.tarjeta}>
+          <View style={styles.contenedor}>
+            
+            <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
+            <Text style={styles.texto_bienvenido}>Bienvenido a DrinkNet</Text>
+            <TextInput placeholder='Nombre' style={styles.texto_input} value={estado.nombre} onChangeText={(value)=>handleChangeText(value,'nombre')}/>
+            <TextInput placeholder='E-mail' style={styles.texto_input} value={estado.email} onChangeText={(value)=>handleChangeText(value,'email')}/>
+            <TextInput placeholder='Password' style={styles.texto_input} secureTextEntry={true} value={estado.password} onChangeText={(value)=>handleChangeText(value,'password')}/>
+            <TextInput placeholder='Edad' style={styles.texto_input} value={estado.edad} onChangeText={(value)=>handleChangeText(value,'edad')}/>
+
+
+            <TouchableOpacity style={styles.boton} onPress={saveUser} >
+              <Text style={styles.textoBoton}>Sign Up</Text>
+            </TouchableOpacity>
+
+          </View>
+        </View>        
       </View>
-    )
+
+
+    </ImageBackground>
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover", // Ajusta la imagen al tamaño del contenedor
+  },
+  contenedorPadre:{
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  tarjeta:{
+    margin:20,
+    backgroundColor:"white",
+    borderRadius:20,
+    width:'90%',
+    padding:20,
+    shadowColor:'#000',
+    shadowOffset:{
+      width:0,
+      height:2
+    },
+    shadowOpacity:0.25,
+    shadowRadius:4,
+    elevation:5
+  },
+  contenedor:{
+    padding:20
+  },
+  logo: {
+    width: 213,
+    height: 120,
+    marginBottom:20,
+    marginLeft:18,
+  },
+  boton: {
+    backgroundColor: "#e40f0f",
+    borderColor: "#e40f0f",
+    borderWidth: 2,
+    borderRadius: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 20,
+  },
+  textoBoton: {
+    textAlign: "center",
+    padding: 10,
+    color: "white",
+    fontSize: 16,
+  },
+  texto_input: {
+    borderColor: "slategray",
+    borderWidth: 1,
+    padding: 10,
+    marginTop: 10,
+    borderRadius:8
+  },
+  texto_bienvenido:{
+    fontSize: 19,
+    fontWeight: "bold",
+    marginLeft:26,
+    marginBottom:5
+  }
+
+});
+
