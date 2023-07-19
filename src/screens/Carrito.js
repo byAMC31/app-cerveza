@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
 } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
-
+import { getAuth } from 'firebase/auth';
 import appFirebase from "../credenciales.js";
 import {
     getFirestore,
@@ -33,34 +33,42 @@ export default function Carrito(props) {
     // Logica para llamar la lista de documentos
 
     useEffect(() => {
+        // 2. Usa getAuth() para obtener la instancia de autenticación
+        const auth = getAuth();
+        // 3. Recuperar la ID del usuario actualmente autenticado
+        const userId = auth.currentUser?.uid;
+        
         const getListaCarrito = async () => {
-            try {
-                const querySnapshot = await getDocs(
-                    collection(db, "usuarios", "VWDAjmJxzXkaf0OY03SM", "carrito")
-                );
-                const docs = [];
-
-                querySnapshot.forEach((doc) => {
-                    const { cantidad, nombre, precio } = doc.data();
-                    docs.push({
-                        id: doc.id,
-                        cantidad,
-                        nombre,
-                        precio,
-                    });
-                    console.log("" + precio);
-                    setMontoTotal(
-                        (prevTotal) => prevTotal + parseInt(precio) * parseInt(cantidad)
-                    );
+          try {
+            if (userId) {
+              const querySnapshot = await getDocs(
+                collection(db, "usuarios", userId, "carrito")
+              );
+              const docs = [];
+    
+              querySnapshot.forEach((doc) => {
+                const { cantidad, nombre, precio } = doc.data();
+                docs.push({
+                  id: doc.id,
+                  cantidad,
+                  nombre,
+                  precio,
                 });
-                setListaCarrito(docs);
-                console.log("monto " + montoTotal);
-            } catch (error) {
-                console.log(error);
+                console.log("" + precio);
+                setMontoTotal(
+                  (prevTotal) =>
+                    prevTotal + parseInt(precio) * parseInt(cantidad)
+                );
+              });
+              setListaCarrito(docs);
+              console.log("monto " + montoTotal);
             }
+          } catch (error) {
+            console.log(error);
+          }
         };
         getListaCarrito();
-    }, []);
+      }, []);
 
     return (
         <ScrollView>
