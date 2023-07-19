@@ -2,48 +2,68 @@ import React, { useState, useEffect } from 'react'
 import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity } from 'react-native'
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 
+import appFirebase from '../credenciales.js';
+import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, getDoc, setDoc } from 'firebase/firestore'
+const db = getFirestore(appFirebase)
+
+import { ListItem, Avatar } from '@rneui/themed';
+import { ListItemContent } from '@rneui/base/dist/ListItem/ListItem.Content.js';
+import { ListItemTitle } from '@rneui/base/dist/ListItem/ListItem.Title.js';
+
 export default function ProductosBotellas(props) {
+    const [lista, setLista] = useState([])
+
+    // Logica para llamar la lista de documentos 
+    useEffect(() => {
+        const getLista = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, 'botellas'))
+                const docs = []
+
+                querySnapshot.forEach((doc) => {
+                    const { nombre, precio, img, existencia } = doc.data()
+                    docs.push({
+                        id: doc.id,
+                        nombre,
+                        precio,
+                        img,
+                        existencia
+                    })
+                })
+
+                setLista(docs);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        getLista()
+    },
+        []
+    )
+
     return (
         <ScrollView>
-            <View style={styles.contenedorPadre}>
-                <View style={styles.tarjeta}>
-                    <View style={styles.contenedor}>
-                        <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
-                        <Text style={styles.texto_bienvenido}>Botellas</Text>
-                        <TouchableOpacity style={styles.boton} onPress={() => props.navigation.navigate('HomeCliente')}>
-                            <Text style={styles.textoBoton}>Comprar</Text>
-                        </TouchableOpacity>
+            <View style={styles.contenedor}>
+                {
+                lista.map((botella) => (
+                    <ListItem bottomDivider key={botella.id}>
 
-                    </View>
-                </View>
-
-                <View style={styles.tarjeta}>
-                    <View style={styles.contenedor}>
-
-                        <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
-                        <Text style={styles.texto_bienvenido}>Botellas</Text>
-
-                        <TouchableOpacity style={styles.boton} onPress={() => props.navigation.navigate('HomeCliente')}>
-                            <Text style={styles.textoBoton}>Comprar</Text>
-                        </TouchableOpacity>
-
-                    </View>
-                </View>
-
-                <View style={styles.tarjeta}>
-                    <View style={styles.contenedor}>
-
-                        <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
-                        <Text style={styles.texto_bienvenido}>Botellas</Text>
-
-                        <TouchableOpacity style={styles.boton} onPress={() => props.navigation.navigate('HomeCliente')}>
-                            <Text style={styles.textoBoton}>Comprar</Text>
-                        </TouchableOpacity>
-
-                    </View>
-                </View>
-
+                        <ListItemContent>
+                            <Image source={{ uri: botella.img }} style={styles.img} />
+                            <ListItemTitle>{botella.nombre}</ListItemTitle>
+                            <Text>${botella.precio},00</Text>
+                            <TouchableOpacity style={styles.boton} onPress={()=>{props.navigation.navigate('ProductoBotella',{
+                                idProducto : botella.id
+                            })}}>
+                                <Text style={styles.textoBoton}>Comprar</Text>
+                            </TouchableOpacity>
+                        </ListItemContent>
+                    </ListItem>
+                ))
+                }
             </View>
+
         </ScrollView>
 
 
@@ -51,12 +71,7 @@ export default function ProductosBotellas(props) {
 }
 
 const styles = StyleSheet.create({
-    contenedorPadre: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    tarjeta: {
+    contenedor: {
         margin: 20,
         backgroundColor: "white",
         borderRadius: 20,
@@ -70,10 +85,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5
-    },
-    contenedor: {
-        padding: 20
-    },
+    }
+    ,
     boton: {
         backgroundColor: "#e40f0f",
         borderColor: "#e40f0f",
@@ -89,11 +102,11 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 16,
     },
-    logo: {
+    img: {
         width: 213,
-        height: 120,
-        marginBottom:20,
-        marginLeft:18,
-      },
+        height: 200,
+        marginBottom: 20,
+        marginLeft: 18,
+    },
 
 });

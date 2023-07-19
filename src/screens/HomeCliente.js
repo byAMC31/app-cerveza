@@ -14,7 +14,7 @@ export default function Login(props) {
                 <Text>Escoje el tipo de bebida</Text>
                 <View style={styles.tarjeta}>
                     <View style={styles.contenedor}>
-                        <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
+                        <Image style={styles.logo} source={require("../img/cervezas.jpg")} />
                         <Text style={styles.texto_bienvenido}>Cervezas</Text>
                         <TouchableOpacity style={styles.boton} onPress={() => props.navigation.navigate('ProductosCervezas')}>
                             <Text style={styles.textoBoton}>Comprar</Text>
@@ -26,7 +26,7 @@ export default function Login(props) {
                 <View style={styles.tarjeta}>
                     <View style={styles.contenedor}>
 
-                        <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
+                        <Image style={styles.logo} source={require("../img/botellas.png")} />
                         <Text style={styles.texto_bienvenido}>Botellas</Text>
 
                         <TouchableOpacity style={styles.boton} onPress={() => props.navigation.navigate('ProductosBotellas')}>

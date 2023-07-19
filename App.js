@@ -17,6 +17,7 @@ import AdminPrincipal from './src/screens/AdminPrincipal';
 import CervezasLista from './src/screens/CervezasLista';
 import CervezasDetalles from './src/screens/CervezasDetalles';
 import CervezasAgregar from './src/screens/CervezasAgregar';
+import ProductoBotella from './src/screens/ProductoBotella';
 
 
 export default function App() {
@@ -166,6 +167,29 @@ export default function App() {
             headerTintColor: "white",
           }}
         />
+
+      <Stack.Screen
+          name="UsuariosDetalles"
+          component={UsuariosDetalles}
+          options={{
+            title: "Detalles del Usuarios",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+       <Stack.Screen
+          name="ProductoBotella"
+          component={ProductoBotella}
+          options={{
+            title: "Detalles de botella",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
 
       </Stack.Navigator>
     );
