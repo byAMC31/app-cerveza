@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import * as Location from 'expo-location';
+import MapViewDirections from 'react-native-maps-directions';
+
 import {
     Text,
     StyleSheet,
@@ -8,6 +11,8 @@ import {
     TouchableOpacity,
     Alert
 } from "react-native";
+
+
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import { getAuth } from 'firebase/auth';
 import appFirebase from "../credenciales.js";
@@ -32,14 +37,22 @@ import MapView, { Marker, Polyline } from "react-native-maps";
 
 
 export default function Carrito(props) {
-    const [userIdLocal,setUserIdLocal] = useState(''); //id del usuario
+    const [userIdLocal, setUserIdLocal] = useState(''); //id del usuario
     const [listaCarrito, setListaCarrito] = useState([]);
     const [montoTotal, setMontoTotal] = useState(0);
-    //Parte para la ubicacion
-    const [ubicacion, setUbicacion] = useState({
-        latitude: 17.062021,
-        longitude: -96.725982
+
+    const [ubicacion, setUbicacion] = React.useState({
+        latitude: 17.078097,
+        longitude: -96.744962
     });
+
+    const [destination, setDestination] = React.useState({
+        latitude: 17.082220,
+        longitude: -96.742451
+    });
+
+
+
 
     //Parte para la ubicacion
 
@@ -51,6 +64,11 @@ export default function Carrito(props) {
         setUserIdLocal(userId);
         getListaCarrito(userId);
     }, []);
+
+
+
+
+
 
     const getListaCarrito = async (userId) => {
         try {
@@ -80,11 +98,11 @@ export default function Carrito(props) {
         } catch (error) {
             console.log(error);
         }
-    
+
     };
 
     const deleteProducto = async (id) => {
-        console.log(db+ " usuarios " + userIdLocal + " carrito " + id);
+        console.log(db + " usuarios " + userIdLocal + " carrito " + id);
         try {
             Alert.alert(
                 "Eliminar producto",
@@ -100,7 +118,7 @@ export default function Carrito(props) {
                             await deleteDoc(
                                 doc(db, "usuarios", userIdLocal, "carrito", id)
                             );
-                            
+
                             setMontoTotal(0);
                             getListaCarrito(userIdLocal);
                         },
@@ -116,6 +134,33 @@ export default function Carrito(props) {
     const realizarPedido = () => {
         console.log(ubicacion);
     }
+
+    React.useEffect(()=>{
+        getLocationPermission();
+        },[])
+        
+        
+        async function getLocationPermission(){
+        let{status}=await Location.requestForegroundPermissionsAsync();
+        if(status !=='granted'){
+          alert('Permiso denegado');
+          return;
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        const current ={
+          latitude:location.coords.latitude,
+          longitude:location.coords.longitude
+        }
+        
+        setUbicacion(current);
+        }
+
+
+
+
+
+
+
 
     return (
         <ScrollView>
@@ -155,7 +200,12 @@ export default function Carrito(props) {
                         </View>
                     ))
                 )}
+                
             </View>
+
+          
+
+
 
 
 
@@ -163,21 +213,36 @@ export default function Carrito(props) {
                 <Text>Escoje la ubicación donde llegará tu pedido</Text>
                 <MapView
                     style={styles.mapa}
+
                     initialRegion={{
                         latitude: ubicacion.latitude,
                         longitude: ubicacion.longitude,
                         latitudeDelta: 0.09,
                         longitudeDelta: 0.04
                     }}
+
                     zoomEnabled={true}
                     zoomControlEnabled={true}
                     zoomTapEnabled={true}
                 >
                     <Marker
+                        coordinate={ubicacion}
+                    />
+                    <Marker
                         draggable
                         coordinate={ubicacion}
-                        onDragEnd={(direction) => setUbicacion(direction.nativeEvent.coordinate)}
+                        onDragEnd={(ubicacion) => setUbicacion(ubicacion.nativeEvent.coordinate)}
                     />
+
+                    <MapViewDirections
+                        origin={ubicacion}
+
+                        apikey={'AIzaSyBQ1LkKAkng61lFZCcFuHXmGFLYcpc9Oq8'}
+
+                    />
+
+
+
                 </MapView>
             </View>
 
