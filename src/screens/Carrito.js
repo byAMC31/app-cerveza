@@ -51,10 +51,8 @@ export default function Carrito(props) {
         longitude: -96.742451
     });
 
-
-
-
-    //Parte para la ubicacion
+    //Datos del usuario
+    const [usuario, setUsuario] = useState({});
 
     useEffect(() => {
         // 2. Usa getAuth() para obtener la instancia de autenticación
@@ -65,14 +63,12 @@ export default function Carrito(props) {
         getListaCarrito(userId);
     }, []);
 
-
-
-
-
-
     const getListaCarrito = async (userId) => {
         try {
             if (userId) {
+                //Obtenemos al usuario primero
+                getOneUser(userId);
+
                 const querySnapshot = await getDocs(
                     collection(db, "usuarios", userId, "carrito")
                 );
@@ -86,14 +82,15 @@ export default function Carrito(props) {
                         nombre,
                         precio,
                     });
-                    console.log("" + precio);
+                    // console.log("" + precio);
                     setMontoTotal(
                         (prevTotal) =>
                             prevTotal + parseInt(precio) * parseInt(cantidad)
                     );
                 });
                 setListaCarrito(docs);
-                console.log("monto " + montoTotal);
+                setUserIdLocal(userId)
+                // console.log("monto " + montoTotal);
             }
         } catch (error) {
             console.log(error);
@@ -131,35 +128,96 @@ export default function Carrito(props) {
         }
     };
 
-    const realizarPedido = () => {
-        console.log(ubicacion);
+    const getOneUser = async (id) => {
+        try {
+            const docRef = doc(db, "usuarios", id);
+            const docSnap = await getDoc(docRef);
+            setUsuario(docSnap.data());
+        } catch (error) {
+            console.log("Error al obtener al usuario " + error.message);
+        }
+    };
+
+    const eliminarContenidoCarrito = async () => {
+        try {
+            const carritoRef = collection(db, 'usuarios', userIdLocal, 'carrito');
+            const querySnapshot = await getDocs(carritoRef);
+
+            // Eliminar cada documento de la colección "carrito"
+            const deletePromises = querySnapshot.docs.map((doc) => deleteDoc(doc.ref));
+            await Promise.all(deletePromises);
+
+        } catch (error) {
+            console.error('Error al eliminar contenido del "carrito":', error);
+        }
+    };
+
+    const realizarPedido = async () => {
+        try {
+            // Verificar si la listaCarrito está vacía
+            if (listaCarrito.length === 0) {
+                Alert.alert('Carrito vacío', 'No hay productos en el carrito para realizar el pedido.');
+                return; 
+            }
+
+            // Mostrar la alerta de confirmación antes de realizar el pedido
+            Alert.alert(
+                'Confirmar pedido',
+                '¿Estás seguro de realizar el pedido?',
+                [
+                    {
+                        text: 'Cancelar',
+                        style: 'cancel',
+                    },
+                    {
+                        text: 'Aceptar',
+                        onPress: async () => {
+                            // Crear el pedido si el usuario acepta
+                            const pedido = {
+                                email: usuario.email,
+                                nombre: usuario.nombre,
+                                latitude: ubicacion.latitude,
+                                longitude: ubicacion.longitude,
+                                pedido: listaCarrito,
+                                montoTotal: montoTotal,
+                                estado: "Por entregar"
+                            };
+                            await addDoc(collection(db, 'pedidos'), { ...pedido });
+                            eliminarContenidoCarrito();
+
+                            Alert.alert('Pedido realizado', '¡El pedido se ha realizado correctamente, pronto llegará a su casa :,)!');
+                            props.navigation.navigate('HomeCliente');
+                            // console.log(pedido);
+                        },
+                    },
+                ],
+                { cancelable: false } // Evitar que se pueda cerrar la alerta tocando fuera de ella
+            );
+        } catch (error) {
+            console.log(error);
+        }
+        // console.log(ubicacion);
     }
 
-    React.useEffect(()=>{
+    React.useEffect(() => {
         getLocationPermission();
-        },[])
-        
-        
-        async function getLocationPermission(){
-        let{status}=await Location.requestForegroundPermissionsAsync();
-        if(status !=='granted'){
-          alert('Permiso denegado');
-          return;
+    }, [])
+
+
+    async function getLocationPermission() {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Permiso denegado');
+            return;
         }
         let location = await Location.getCurrentPositionAsync({});
-        const current ={
-          latitude:location.coords.latitude,
-          longitude:location.coords.longitude
+        const current = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
         }
-        
+
         setUbicacion(current);
-        }
-
-
-
-
-
-
+    }
 
 
     return (
@@ -200,10 +258,10 @@ export default function Carrito(props) {
                         </View>
                     ))
                 )}
-                
+
             </View>
 
-          
+
 
 
 
@@ -240,9 +298,6 @@ export default function Carrito(props) {
                         apikey={'AIzaSyBQ1LkKAkng61lFZCcFuHXmGFLYcpc9Oq8'}
 
                     />
-
-
-
                 </MapView>
             </View>
 
