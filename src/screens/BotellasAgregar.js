@@ -6,7 +6,7 @@ import credenciales from '../credenciales';
 import Toast from 'react-native-toast-message';
 import * as ImagePicker from 'expo-image-picker';
 
-const CervezasAgregar = ({ navigation }) => {
+const BotellasAgregar = ({ navigation }) => {
   const [nombre, setNombre] = useState('');
   const [precio, setPrecio] = useState('');
   const [img, setImg] = useState(null);
@@ -56,35 +56,35 @@ const CervezasAgregar = ({ navigation }) => {
 
   const handleRegistrar = () => {
     Alert.alert(
-      'Registrar cerveza',
-      '¿Estás seguro/a de que quieres registrar la cerveza?',
+      'Registrar botella',
+      '¿Estás seguro/a de que quieres registrar la botella?',
       [
         { text: 'Cancelar', style: 'cancel' },
-        { text: 'Registrar', onPress: registrarCerveza }
+        { text: 'Registrar', onPress: registrarBotella }
       ]
     );
   };
 
-  const registrarCerveza = async () => {
+  const registrarBotella = async () => {
     try {
       const db = getFirestore(credenciales.appFirebase);
-      const cervezasRef = collection(db, 'cervezas');
+      const botellasRef = collection(db, 'botellas');
 
-      await addDoc(cervezasRef, {
+      await addDoc(botellasRef, {
         nombre: nombre,
         precio: precio,
         existencia: existencia,
         img: img,
       });
 
-      console.log('Cerveza registrada correctamente');
+      console.log('Botella registrada correctamente');
       Toast.show({
         type: 'success',
         text1: 'Registro exitoso',
-        text2: 'La cerveza se ha registrado correctamente.',
+        text2: 'La botella se ha registrado correctamente.',
       });
 
-      navigation.navigate('CervezasLista', { refresh: true });
+      navigation.navigate('BotellasLista', { refresh: true });
     } catch (error) {
       console.log(error);
     }
@@ -164,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CervezasAgregar;
+export default BotellasAgregar;

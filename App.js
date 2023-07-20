@@ -18,6 +18,9 @@ import CervezasLista from './src/screens/CervezasLista';
 import CervezasDetalles from './src/screens/CervezasDetalles';
 import CervezasAgregar from './src/screens/CervezasAgregar';
 import ProductoBotella from './src/screens/ProductoBotella';
+import BotellasLista from './src/screens/BotellasLista';
+import BotellasDetalles from './src/screens/BotellasDetalles';
+import BotellasAgregar from './src/screens/BotellasAgregar';
 
 
 export default function App() {
@@ -91,7 +94,7 @@ export default function App() {
           }}
         />
 
-<Stack.Screen
+      <Stack.Screen
           name="ProductoCerveza"
           component={ProductoCerveza}
           options={{
@@ -190,6 +193,38 @@ export default function App() {
           }}
         />
 
+        <Stack.Screen
+          name="BotellasLista"
+          component={BotellasLista}
+          options={{
+            title: "Lista de botellas",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+        <Stack.Screen
+          name="BotellasDetalles"
+          component={BotellasDetalles}
+          options={{
+            title: "Detalles de botella",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+        <Stack.Screen
+          name="BotellasAgregar"
+          component={BotellasAgregar}
+          options={{
+            title: "Agregar una Botella",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
 
       </Stack.Navigator>
     );
