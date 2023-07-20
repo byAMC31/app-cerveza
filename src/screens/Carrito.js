@@ -174,6 +174,7 @@ export default function Carrito(props) {
                         onPress: async () => {
                             // Crear el pedido si el usuario acepta
                             const pedido = {
+                                id_autentificacion: userIdLocal,
                                 email: usuario.email,
                                 nombre: usuario.nombre,
                                 latitude: ubicacion.latitude,
