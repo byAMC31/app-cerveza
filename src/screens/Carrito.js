@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
-import * as Location from 'expo-location';
 import MapViewDirections from 'react-native-maps-directions';
+import * as Location from 'expo-location';
+import * as LocationGeocoding from 'expo-location';
 
 import {
     Text,
     StyleSheet,
     View,
-    ImageBackground,
-    Image,
     TouchableOpacity,
     Alert
 } from "react-native";
 
 
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 import { getAuth } from 'firebase/auth';
 import appFirebase from "../credenciales.js";
 import {
@@ -24,13 +23,11 @@ import {
     doc,
     deleteDoc,
     getDoc,
-    setDoc,
 } from "firebase/firestore";
 const db = getFirestore(appFirebase);
 
 import { ListItem, Avatar } from "@rneui/themed";
 import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content.js";
-import { ListItemTitle } from "@rneui/base/dist/ListItem/ListItem.Title.js";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import MapView, { Marker, Polyline } from "react-native-maps";
@@ -43,7 +40,8 @@ export default function Carrito(props) {
 
     const [ubicacion, setUbicacion] = React.useState({
         latitude: 17.078097,
-        longitude: -96.744962
+        longitude: -96.744962,
+        address: ''
     });
 
     const [destination, setDestination] = React.useState({
@@ -61,6 +59,7 @@ export default function Carrito(props) {
         const userId = auth.currentUser?.uid;
         setUserIdLocal(userId);
         getListaCarrito(userId);
+        getLocationPermission();
     }, []);
 
     const getListaCarrito = async (userId) => {
@@ -157,7 +156,7 @@ export default function Carrito(props) {
             // Verificar si la listaCarrito está vacía
             if (listaCarrito.length === 0) {
                 Alert.alert('Carrito vacío', 'No hay productos en el carrito para realizar el pedido.');
-                return; 
+                return;
             }
 
             // Mostrar la alerta de confirmación antes de realizar el pedido
@@ -181,7 +180,8 @@ export default function Carrito(props) {
                                 longitude: ubicacion.longitude,
                                 pedido: listaCarrito,
                                 montoTotal: montoTotal,
-                                estado: "Por entregar"
+                                estado: "Por entregar",
+                                domicilio: ubicacion.address
                             };
                             await addDoc(collection(db, 'pedidos'), { ...pedido });
                             eliminarContenidoCarrito();
@@ -217,7 +217,27 @@ export default function Carrito(props) {
             longitude: location.coords.longitude
         }
 
-        setUbicacion(current);
+        try {
+            let address = await LocationGeocoding.reverseGeocodeAsync({
+                latitude: current.latitude,
+                longitude: current.longitude,
+            });
+            
+            // Si se encontró una dirección válida, establecerla en el estado
+            if (address.length > 0) {
+                let fullAddress = `${address[0].name}, ${address[0].street}, ${address[0].region}, ${address[0].country}`;
+                console.log("direccion:" + fullAddress);
+                setUbicacion((prevUbicacion) => ({ ...prevUbicacion, ...current, address: fullAddress }));
+            } else {
+                // Si no se encontró una dirección válida, establecer solo las coordenadas
+                setUbicacion((prevUbicacion) => ({ ...prevUbicacion, ...current }));
+            }
+        } catch (error) {
+            console.log('Error al obtener la dirección: ', error);
+            // Establecer solo las coordenadas en caso de error
+            setUbicacion((prevUbicacion) => ({ ...prevUbicacion, ...current }));
+        }
+        // setUbicacion(current);
     }
 
 
@@ -262,14 +282,8 @@ export default function Carrito(props) {
 
             </View>
 
-
-
-
-
-
-
             <View style={styles.contenedorPadre}>
-                <Text>Escoje la ubicación donde llegará tu pedido</Text>
+                <Text>Ubicación donde llegará su pedido</Text>
                 <MapView
                     style={styles.mapa}
 
@@ -284,9 +298,7 @@ export default function Carrito(props) {
                     zoomControlEnabled={true}
                     zoomTapEnabled={true}
                 >
-                    <Marker
-                        coordinate={ubicacion}
-                    />
+                    
                     <Marker
                         draggable
                         coordinate={ubicacion}
@@ -300,8 +312,9 @@ export default function Carrito(props) {
 
                     />
                 </MapView>
+                <Text> {ubicacion.address}</Text>
             </View>
-
+            
             <View style={styles.tarjeta_boton_pedido}>
                 <Text>Total a pagar: ${montoTotal.toString()},00</Text>
                 <TouchableOpacity style={styles.boton}>

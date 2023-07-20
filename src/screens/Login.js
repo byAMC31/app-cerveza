@@ -18,7 +18,10 @@ export default function Login(props) {
       // Redirect the user to the appropriate screen based on their credentials
       if (email === 'admin@gmail.com' && password === '123456') {
         props.navigation.navigate('AdminPrincipal');
-      } else {
+      } else if(email === 'repartidor@gmail.com' && password === '123456'){
+        props.navigation.navigate('HomeRepartidor');
+      }
+      else{
         props.navigation.navigate('HomeCliente');
       }
     } catch (error) {
