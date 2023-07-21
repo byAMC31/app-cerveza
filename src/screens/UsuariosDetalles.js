@@ -138,7 +138,7 @@ const UsuariosDetalles = ({ navigation, route }) => {
           <TextInput style={styles.input} value={password} onChangeText={(text) => setPassword(text)}/>
           
           <TouchableHighlight style={styles.buttonContainer} onPress={handleActualizar} underlayColor="#50B91E">
-        <Text style={styles.buttonText}>Actualizar</Text>
+        <Text style={styles.buttonText}>Actualizar datos</Text>
       </TouchableHighlight>
       
     

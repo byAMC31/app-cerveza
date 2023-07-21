@@ -8,70 +8,126 @@ const db = getFirestore(appFirebase)
 
 import { ListItem } from '@rneui/themed';
 import { ListItemContent } from '@rneui/base/dist/ListItem/ListItem.Content.js';
+import { getAuth } from 'firebase/auth';
+
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export default function HomeRepartidor(props) {
     const [listaPedidos, setListaPedidos] = useState([])
-
-    // Logica para llamar la lista de documentos 
-    useEffect(() => {
-        const getListaPedidos = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, 'pedidos'))
-                const docs = []
-
-                querySnapshot.forEach((doc) => {
-                    const { email, estado, id_autentificacion, latitude, longitude, montoTotal, nombre,domicilio,pedido } = doc.data()
+    //Id del usuario
+    const auth = getAuth();
+    // 3. Recuperar la ID del usuario actualmente autenticado
+    const userId = auth.currentUser?.uid;
+    const [repartidor, setRepartidor] = useState([])
+    const obtenerRepartidor = async () => {
+        try {
+            const docRef = doc(db, "usuarios", userId);
+            const docSnap = await getDoc(docRef);
+            setRepartidor(docSnap.data());
+        } catch (error) {
+            console.log("Error repartidor " + error.message);
+        }
+    }
+    const getListaPedidos = async () => {
+        try {
+            const querySnapshot = await getDocs(collection(db, 'pedidos'))
+            const docs = []
+            querySnapshot.forEach((doc) => {
+                const { email, estado, id_cliente, latitude, longitude, montoTotal, nombre, domicilio, pedido, repartidor, fecha } = doc.data()
+                if (repartidor == "Sin asignar") {
                     docs.push({
                         id: doc.id,
                         email,
                         estado,
-                        id_autentificacion,
+                        id_cliente,
                         latitude,
                         longitude,
                         montoTotal,
                         nombre,
                         domicilio,
-                        pedido
+                        pedido,
+                        fecha
                     })
-                })
+                }
 
-                setListaPedidos(docs);
-            }
-            catch (error) {
-                console.log(error);
-            }
+            })
+            setListaPedidos(docs);
         }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    // Logica para llamar la lista de documentos 
+    useEffect(() => {
+        obtenerRepartidor()
         getListaPedidos()
     },
-        []
+        [] //esto consume muchas lecturas
     )
 
     return (
         <ScrollView>
+            <View style={styles.contenedor_botones}>
+                <TouchableOpacity style={styles.boton_pedido} onPress={() => props.navigation.navigate('PedidosActivosRepartidor')}>
+                    <Icon
+                        style={styles.icono}
+                        name="check-square-o"
+                        size={30}
+                        color="white"
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.boton_pedido} onPress={() => props.navigation.navigate('PedidosRealizadosRepartidor')}>
+                    <Icon
+                        style={styles.icono}
+                        name="check-square"
+                        size={30}
+                        color="white"
+                    />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.boton_pedido} onPress={getListaPedidos}            >
+                <Icon
+                        style={styles.icono}
+                        name="refresh"
+                        size={30}
+                        color="white"
+                    />
+                </TouchableOpacity>
+            </View>
+
             <View style={styles.main_contenedor}>
+                <Text style={styles.texto_pedidos_activos}>Bienvenido repartidor: {repartidor.nombre}</Text>
                 <Text style={styles.texto_pedidos_activos}>Pedidos disponibles</Text>
-                    {
-                        listaPedidos.map((pedido) => (
-                            <View style={styles.card} key={pedido.id}>
-                            <ListItem  key={pedido.id}>
+                {
+                    listaPedidos.map((pedido) => (
+                        <View style={styles.card} key={pedido.id}>
+                            <ListItem key={pedido.id}>
                                 <ListItemContent>
+                                    <Text style={styles.texto_pedido_etiqueta}>Id pedido: </Text>
+                                    <Text style={styles.texto_pedido}>{pedido.id}</Text>
                                     <Text style={styles.texto_pedido_etiqueta}>Nombre: </Text>
                                     <Text style={styles.texto_pedido}>{pedido.nombre}</Text>
                                     <Text style={styles.texto_pedido_etiqueta}>Dirección: </Text>
                                     <Text style={styles.texto_pedido}>{pedido.domicilio}</Text>
+                                    <Text style={styles.texto_pedido_etiqueta}>Fecha y hora: </Text>
+                                    <Text style={styles.texto_pedido}>{pedido.fecha}</Text>
                                     <TouchableOpacity style={styles.boton} onPress={() => {
                                         props.navigation.navigate('MapaPedido', {
-                                            dataCliente: pedido
+                                            data_cliente: pedido,
+                                            data_repartidor: repartidor,
+                                            id_pedido: pedido.id,
+                                            id_repartidor: userId,
                                         })
                                     }}>
                                         <Text style={styles.texto_boton}>Aceptar pedido</Text>
                                     </TouchableOpacity>
                                 </ListItemContent>
                             </ListItem>
-                            </View>
-                        ))
-                    }
-                
+                        </View>
+                    ))
+                }
+
             </View>
 
 
@@ -82,8 +138,15 @@ export default function HomeRepartidor(props) {
 }
 
 const styles = StyleSheet.create({
+    icono: {
+        padding: 8,
+    },
     main_contenedor: {
         flex: 1
+    },
+    contenedor_botones:{
+        flexDirection:'row',
+        marginLeft:85
     },
     card: {
         margin: 20,
@@ -115,18 +178,27 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 16,
     },
-    texto_pedidos_activos:{
+    texto_pedidos_activos: {
         textAlign: "center",
         marginTop: 10,
         fontSize: 20,
         fontWeight: 'bold',
     },
-    texto_pedido:{
-        marginTop:5
+    texto_pedido: {
+        marginTop: 5
     },
-    texto_pedido_etiqueta:{
-        fontWeight:'bold'
+    texto_pedido_etiqueta: {
+        fontWeight: 'bold'
 
-    }
-    
+    },
+    boton_pedido: {
+        backgroundColor: "#e40f0f",
+        borderColor: "#e40f0f",
+        borderWidth: 2,
+        borderRadius: 15,
+        marginLeft: 6,
+        marginRight: 5,
+        marginTop: 15,
+    },
+
 });

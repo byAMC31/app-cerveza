@@ -173,7 +173,7 @@ export default function Carrito(props) {
                         onPress: async () => {
                             // Crear el pedido si el usuario acepta
                             const pedido = {
-                                id_autentificacion: userIdLocal,
+                                id_cliente: userIdLocal,
                                 email: usuario.email,
                                 nombre: usuario.nombre,
                                 latitude: ubicacion.latitude,
@@ -181,7 +181,10 @@ export default function Carrito(props) {
                                 pedido: listaCarrito,
                                 montoTotal: montoTotal,
                                 estado: "Por entregar",
-                                domicilio: ubicacion.address
+                                domicilio: ubicacion.address,
+                                repartidor: "Sin asignar",
+                                fecha: new Date().toLocaleString(),
+                                id_repartidor: "Sin asignar"
                             };
                             await addDoc(collection(db, 'pedidos'), { ...pedido });
                             eliminarContenidoCarrito();

@@ -7,13 +7,13 @@ import { getFirestore, collection, addDoc,setDoc,doc } from 'firebase/firestore'
 
 const db = getFirestore(appFirebase);
 
-export default function SignUp(props) {
+export default function RepartidoresAgregar(props) {
   // Variables para capturar los datos
   const initialState = {
     nombre: '',
     email: '',
     password: '',
-    edad: ''
+    edad: '',
   }
 
   const [estado, setEstado] = useState(initialState);
@@ -34,7 +34,7 @@ export default function SignUp(props) {
           email: estado.email,
           password: estado.password,
           edad: estado.edad,
-          rol: 'cliente',
+          rol: 'repartidor',
         };
   
         // Crear el usuario en Firebase Authentication
@@ -44,8 +44,8 @@ export default function SignUp(props) {
         // Utiliza setDoc para agregar el usuario con el UID como ID del documento en Firestore
         await setDoc(doc(db, 'usuarios', user.uid), usuario);
   
-        Alert.alert('Registro exitoso', '¡Usuario registrado con éxito!');
-        props.navigation.navigate('Principal');
+        Alert.alert('Registro exitoso', '¡Repartidor registrado con éxito!');
+        props.navigation.navigate('RepartidoresLista');
       }
     } catch (error) {
 
@@ -72,15 +72,15 @@ export default function SignUp(props) {
       <View style={styles.contenedorPadre}>
         <View style={styles.tarjeta}>
           <View style={styles.contenedor}>
-            <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
-            <Text style={styles.texto_bienvenido}>Bienvenido a DrinkNet</Text>
+            <Image style={styles.logo} source={require("../img/repartidor2.png")} />
+            <Text style={styles.texto_bienvenido}>Registro de repartidores</Text>
             <TextInput placeholder='Nombre' style={styles.texto_input} value={estado.nombre} onChangeText={(value) => handleChangeText(value, 'nombre')} />
             <TextInput placeholder='E-mail' style={styles.texto_input} value={estado.email} onChangeText={(value) => handleChangeText(value, 'email')} />
             <TextInput placeholder='Password' style={styles.texto_input} secureTextEntry={true} value={estado.password} onChangeText={(value) => handleChangeText(value, 'password')} />
             <TextInput placeholder='Edad' style={styles.texto_input} value={estado.edad} onChangeText={(value) => handleChangeText(value, 'edad')} />
 
             <TouchableOpacity style={styles.boton} onPress={signUpUser} >
-              <Text style={styles.textoBoton}>Sign Up</Text>
+              <Text style={styles.textoBoton}>Registrar repartidor</Text>
             </TouchableOpacity>
 
           </View>
@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
     marginLeft: 18,
   },
   boton: {
-    backgroundColor: "#e40f0f",
-    borderColor: "#e40f0f",
+    backgroundColor: "#F9651B",
+    borderColor: "#F9651B",
     borderWidth: 2,
     borderRadius: 20,
     marginLeft: 20,

@@ -21,7 +21,7 @@ import {
     getDocs,
     doc,
     deleteDoc,
-    getDoc,
+    getDoc,updateDoc
 } from "firebase/firestore";
 const db = getFirestore(appFirebase);
 const casa = require('../img/home.png');
@@ -43,18 +43,11 @@ export default function Carrito(props) {
     const [listaCarrito, setListaCarrito] = useState([]);
     const [montoTotal, setMontoTotal] = useState(0);
 
-
     const dataCliente = () => {
-
-        const data = props.route.params.dataCliente;
+        const data = props.route.params.data_cliente;
         //console.log(props.route.params.dataCliente.pedido); 
         la = data.latitude;
         lo = data.longitude;
-
-
-
-
-
     }
 
     dataCliente();
@@ -70,12 +63,27 @@ export default function Carrito(props) {
         address: ''
     });
 
-
+    const iniciarPedido = async() =>{
+        console.log(props.route.params.data_repartidor.nombre)
+        console.log(props.route.params.id_pedido)
+        try {
+            const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
+            await updateDoc(documentoRef, {
+              'repartidor': props.route.params.data_repartidor.nombre,
+              'estado': "En proceso de entrega",
+              'id_repartidor': props.route.params.id_repartidor
+            });
+        
+            console.log('Atributo actualizado correctamente.');
+          } catch (error) {
+            console.error('Error al actualizar el atributo:', error);
+          }
+        props.navigation.navigate('HomeRepartidor')
+    }
 
     useEffect(() => {
         dataCliente();
         getLocationPermission();
-
         // Actualiza la ubicación actual cada segundo (1000 milisegundos)
         const intervalId = setInterval(() => {
             getLocationPermission();
@@ -146,9 +154,12 @@ export default function Carrito(props) {
             </View>
 
             <View style={styles.tarjeta_boton_pedido}>
+                <TouchableOpacity style={styles.boton}>
+                    <Text style={styles.textoBoton} onPress={iniciarPedido}>Iniciar pedido</Text>
+                </TouchableOpacity>
                 <Text>Detalles de pedido         Total: {montoTotal}</Text>
                 <View>
-                    {props.route.params.dataCliente.pedido.map((item) => (
+                    {props.route.params.data_cliente.pedido.map((item) => (
                         <Text key={item.id}>
                             {item.cantidad}    {item.nombre}
                         </Text>
