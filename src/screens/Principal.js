@@ -26,7 +26,7 @@ export default function Principal(props) {
         <View style={styles.container_botones}>
           <View style={styles.container_btn_login}>
             {/* Boton de iniciar sesion */}
-            <TouchableOpacity style={styles.boton} onPress={()=>props.navigation.navigate('HomeRepartidor')}>
+            <TouchableOpacity style={styles.boton} onPress={()=>props.navigation.navigate('Login')}>
               <Text style={styles.textoBoton}>Log In</Text>
             </TouchableOpacity>
           </View>
