@@ -97,7 +97,7 @@ export default function HomeRepartidor(props) {
             </View>
 
             <View style={styles.main_contenedor}>
-                <Text style={styles.texto_pedidos_activos}>Bienvenido repartidor: {repartidor.nombre}</Text>
+                <Text style={styles.texto_pedidos_activos}>¡Bienvenido! {repartidor.nombre}</Text>
                 <Text style={styles.texto_pedidos_activos}>Pedidos disponibles</Text>
                 {
                     listaPedidos.map((pedido) => (
