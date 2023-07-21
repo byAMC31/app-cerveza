@@ -24,6 +24,9 @@ import MapaPedido from './src/screens/MapaPedido';
 import PedidosCliente from './src/screens/PedidosCliente';
 import PedidosActivoRepartidor from './src/screens/PedidosActivosRepartidor'; 
 import PedidosRealizadosRepartidor from './src/screens/PedidosRealizadosRepartidor'; 
+import RepartidoresLista from './src/screens/RepartidoresLista';
+import RepartidoresAgregar from './src/screens/RepartidoresAgregar';
+
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -244,6 +247,26 @@ export default function App() {
           component={MapaPedido}
           options={{
             title: "Mapa pedido",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="RepartidoresLista"
+          component={RepartidoresLista}
+          options={{
+            title: "Lista de repartidores",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="RepartidoresAgregar"
+          component={RepartidoresAgregar}
+          options={{
+            title: "Agregar un repartidor",
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#e40f0f" },
             headerTintColor: "white",

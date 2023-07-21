@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity } from 'react-native'
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import Icon from "react-native-vector-icons/FontAwesome";
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
+const Drawer = createDrawerNavigator();
 
 export default function HomeCliente(props) {
     return (

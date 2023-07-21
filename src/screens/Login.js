@@ -3,28 +3,54 @@ import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity, Alert
 import { TextInput } from 'react-native-gesture-handler';
 import { getAuth, signInWithEmailAndPassword, AuthErrorCodes } from 'firebase/auth';
 import appFirebase from '../credenciales'; // Import the Firebase app instance
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function Login(props) {
   const [email, setEmail] = useState('');
+  const [rol, setRol] = useState('');
+
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
   const handleLogin = async () => {
     try {
-      // Sign in the user with email and password
       const auth = getAuth();
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      
+      // Get the user's role from Firestore
+      const db = getFirestore();
+      const usersCollection = collection(db, 'usuarios'); // Replace 'usuarios' with the actual collection name
+      const q = query(usersCollection, where('email', '==', user.email));
+      const querySnapshot = await getDocs(q);
   
-      // Redirect the user to the appropriate screen based on their credentials
-      if (email === 'admin@gmail.com' && password === '123456') {
-        props.navigation.navigate('AdminPrincipal');
-      } else if(email === 'repartidor@gmail.com' && password === '123456'){
-        props.navigation.navigate('HomeRepartidor');
+      let role = 'cliente'; 
+      if (!querySnapshot.empty) {
+        const userData = querySnapshot.docs[0].data();
+        if (userData.rol) {
+          role = userData.rol;
+        } else {
+          console.log("Rol de usuario no encontrado. Por defecto a 'cliente'.");
+        }
+      } else {
+        console.log("Rol de usuario no encontrado. Por defecto a 'cliente'.");
       }
-      else{
-        props.navigation.navigate('HomeCliente');
+  
+      // Redirigir al usuario a la pantalla adecuada según su rol
+      switch (role) {
+        case 'admin':
+          props.navigation.navigate('AdminPrincipal');
+          break;
+        case 'repartidor':
+          props.navigation.navigate('HomeRepartidor');
+          break;
+        case 'cliente':
+          props.navigation.navigate('HomeCliente');
+          break;
+        default:
+          props.navigation.navigate('HomeCliente'); 
       }
-    } catch (error) {
+    }  catch (error) {
       // Traducir los errores específicos de Firebase al español
       switch (error.code) {
         case 'auth/invalid-email':
