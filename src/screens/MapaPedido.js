@@ -157,7 +157,7 @@ export default function Carrito(props) {
                 <TouchableOpacity style={styles.boton}>
                     <Text style={styles.textoBoton} onPress={iniciarPedido}>Iniciar pedido</Text>
                 </TouchableOpacity>
-                <Text>Detalles de pedido         Total: ${props.route.params.data_cliente.montoTotal},00</Text>
+                <Text style={styles.texto_precio}>Detalles de pedido         Total: ${props.route.params.data_cliente.montoTotal},00</Text>
                 <View>
                     {props.route.params.data_cliente.pedido.map((item) => (
                         <Text key={item.id}>
@@ -250,7 +250,8 @@ const styles = StyleSheet.create({
     },
     texto_precio: {
         color: "black",
-        fontSize: 14,
+        fontSize: 16,
+        fontWeight: "bold",
     },
     mapa: {
         width: 350,

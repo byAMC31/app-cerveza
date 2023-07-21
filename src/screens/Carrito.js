@@ -31,7 +31,7 @@ import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content.js";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import MapView, { Marker, Polyline } from "react-native-maps";
-
+const casa = require('../img/home.png');
 
 export default function Carrito(props) {
     const [userIdLocal, setUserIdLocal] = useState(''); //id del usuario
@@ -303,9 +303,10 @@ export default function Carrito(props) {
                 >
                     
                     <Marker
-                        draggable
+                      //  draggable
                         coordinate={ubicacion}
-                        onDragEnd={(ubicacion) => setUbicacion(ubicacion.nativeEvent.coordinate)}
+                        image={casa}
+                        //onDragEnd={(ubicacion) => setUbicacion(ubicacion.nativeEvent.coordinate)}
                     />
 
                     <MapViewDirections
