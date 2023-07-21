@@ -1,5 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 import 'react-native-gesture-handler';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -21,6 +19,10 @@ import ProductoBotella from './src/screens/ProductoBotella';
 import BotellasLista from './src/screens/BotellasLista';
 import BotellasDetalles from './src/screens/BotellasDetalles';
 import BotellasAgregar from './src/screens/BotellasAgregar';
+import HomeRepartidor from './src/screens/HomeRepartidor';
+import MapaPedido from './src/screens/MapaPedido';
+import RepartidoresLista from './src/screens/RepartidoresLista';
+import RepartidoresAgregar from './src/screens/RepartidoresAgregar';
 
 
 export default function App() {
@@ -94,7 +96,7 @@ export default function App() {
           }}
         />
 
-      <Stack.Screen
+        <Stack.Screen
           name="ProductoCerveza"
           component={ProductoCerveza}
           options={{
@@ -117,7 +119,7 @@ export default function App() {
           }}
         />
 
-      <Stack.Screen
+        <Stack.Screen
           name="Carrito"
           component={Carrito}
           options={{
@@ -128,7 +130,7 @@ export default function App() {
           }}
         />
 
-      <Stack.Screen
+        <Stack.Screen
           name="AdminPrincipal"
           component={AdminPrincipal}
           options={{
@@ -139,7 +141,7 @@ export default function App() {
           }}
         />
 
-      <Stack.Screen
+        <Stack.Screen
           name="CervezasLista"
           component={CervezasLista}
           options={{
@@ -160,7 +162,7 @@ export default function App() {
           }}
         />
 
-      <Stack.Screen
+        <Stack.Screen
           name="CervezasAgregar"
           component={CervezasAgregar}
           options={{
@@ -171,7 +173,7 @@ export default function App() {
           }}
         />
 
-      <Stack.Screen
+        <Stack.Screen
           name="UsuariosDetalles"
           component={UsuariosDetalles}
           options={{
@@ -182,7 +184,7 @@ export default function App() {
           }}
         />
 
-       <Stack.Screen
+        <Stack.Screen
           name="ProductoBotella"
           component={ProductoBotella}
           options={{
@@ -220,6 +222,48 @@ export default function App() {
           component={BotellasAgregar}
           options={{
             title: "Agregar una Botella",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+        <Stack.Screen
+          name="HomeRepartidor"
+          component={HomeRepartidor}
+          options={{
+            title: "Repartidor",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+        <Stack.Screen
+          name="MapaPedido"
+          component={MapaPedido}
+          options={{
+            title: "Mapa pedido",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="RepartidoresLista"
+          component={RepartidoresLista}
+          options={{
+            title: "Lista de repartidores",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="RepartidoresAgregar"
+          component={RepartidoresAgregar}
+          options={{
+            title: "Agregar un repartidor",
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#e40f0f" },
             headerTintColor: "white",
