@@ -3,13 +3,21 @@ import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity } from
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import Icon from "react-native-vector-icons/FontAwesome";
 
-export default function Login(props) {
+export default function HomeCliente(props) {
     return (
         <ScrollView>
             <View style={styles.contenedorPadre}>
 
                 <View style={styles.icono_contenedor}>
                     
+                    <TouchableOpacity style={styles.boton_pedido} onPress={() => props.navigation.navigate('PedidosCliente')}>
+                        <Icon
+                            style={styles.icono}
+                            name="list-ul"
+                            size={30}
+                            color="white"
+                        />
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.boton_carrito} onPress={() => props.navigation.navigate('Carrito')}>
                         <Icon
                             style={styles.icono}
@@ -115,6 +123,15 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginTop: 15,
     },
+    boton_pedido: {
+        backgroundColor: "#e40f0f",
+        borderColor: "#e40f0f",
+        borderWidth: 2,
+        borderRadius: 15,
+        marginLeft: 10,
+        marginRight: 210,
+        marginTop: 15,
+    },
     icono: {
         padding: 8,
     },
@@ -122,6 +139,7 @@ const styles = StyleSheet.create({
         textAlign:'center',
         fontSize: 18,
         fontWeight: 'bold',
+        marginTop:20
     },
     texto_categoria:{
         textAlign:'center',

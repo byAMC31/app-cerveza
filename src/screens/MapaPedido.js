@@ -22,7 +22,7 @@ import {
     getDocs,
     doc,
     deleteDoc,
-    getDoc,
+    getDoc,updateDoc
 } from "firebase/firestore";
 const db = getFirestore(appFirebase);
 
@@ -50,8 +50,22 @@ export default function Carrito(props) {
     });
 
     
-    const dataCliente = () =>{
-        console.log(props.route.params.dataCliente)
+    const iniciarPedido = async() =>{
+        console.log(props.route.params.data_repartidor.nombre)
+        console.log(props.route.params.id_pedido)
+        try {
+            const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
+            await updateDoc(documentoRef, {
+              'repartidor': props.route.params.data_repartidor.nombre,
+              'estado': "En proceso de entrega",
+              'id_repartidor': props.route.params.id_repartidor
+            });
+        
+            console.log('Atributo actualizado correctamente.');
+          } catch (error) {
+            console.error('Error al actualizar el atributo:', error);
+          }
+        props.navigation.navigate('HomeRepartidor')
     }
     useEffect(() => {
     }, []);
@@ -93,9 +107,8 @@ export default function Carrito(props) {
             </View>
             
             <View style={styles.tarjeta_boton_pedido}>
-                <Text>Total a pagar: ${montoTotal.toString()},00</Text>
                 <TouchableOpacity style={styles.boton}>
-                    <Text style={styles.textoBoton} onPress={dataCliente}>Realizar pedido</Text>
+                    <Text style={styles.textoBoton} onPress={iniciarPedido}>Iniciar pedido</Text>
                 </TouchableOpacity>
             </View>
 

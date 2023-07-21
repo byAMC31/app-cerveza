@@ -21,6 +21,10 @@ import BotellasDetalles from './src/screens/BotellasDetalles';
 import BotellasAgregar from './src/screens/BotellasAgregar';
 import HomeRepartidor from './src/screens/HomeRepartidor';
 import MapaPedido from './src/screens/MapaPedido';
+import PedidosCliente from './src/screens/PedidosCliente';
+import PedidosActivoRepartidor from './src/screens/PedidosActivosRepartidor'; 
+import PedidosRealizadosRepartidor from './src/screens/PedidosRealizadosRepartidor'; 
+
 export default function App() {
   const Stack = createStackNavigator();
   function MyStack() {
@@ -240,6 +244,38 @@ export default function App() {
           component={MapaPedido}
           options={{
             title: "Mapa pedido",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+        <Stack.Screen
+          name="PedidosCliente"
+          component={PedidosCliente}
+          options={{
+            title: "Pedidos realizados",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+<Stack.Screen
+          name="PedidosActivosRepartidor"
+          component={PedidosActivoRepartidor}
+          options={{
+            title: "Pedidos activos",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="PedidosRealizadosRepartidor"
+          component={PedidosRealizadosRepartidor}
+          options={{
+            title: "Pedidos realizados",
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#e40f0f" },
             headerTintColor: "white",
