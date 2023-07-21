@@ -43,18 +43,11 @@ export default function Carrito(props) {
     const [listaCarrito, setListaCarrito] = useState([]);
     const [montoTotal, setMontoTotal] = useState(0);
 
-
     const dataCliente = () => {
-
-        const data = props.route.params.dataCliente;
+        const data = props.route.params.data_cliente;
         //console.log(props.route.params.dataCliente.pedido); 
         la = data.latitude;
         lo = data.longitude;
-
-
-
-
-
     }
 
     dataCliente();
@@ -70,8 +63,6 @@ export default function Carrito(props) {
         address: ''
     });
 
-
-    
     const iniciarPedido = async() =>{
         console.log(props.route.params.data_repartidor.nombre)
         console.log(props.route.params.id_pedido)
@@ -93,7 +84,6 @@ export default function Carrito(props) {
     useEffect(() => {
         dataCliente();
         getLocationPermission();
-
         // Actualiza la ubicación actual cada segundo (1000 milisegundos)
         const intervalId = setInterval(() => {
             getLocationPermission();
@@ -169,7 +159,7 @@ export default function Carrito(props) {
                 </TouchableOpacity>
                 <Text>Detalles de pedido         Total: {montoTotal}</Text>
                 <View>
-                    {props.route.params.dataCliente.pedido.map((item) => (
+                    {props.route.params.data_cliente.pedido.map((item) => (
                         <Text key={item.id}>
                             {item.cantidad}    {item.nombre}
                         </Text>

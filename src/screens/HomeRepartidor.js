@@ -33,7 +33,7 @@ export default function HomeRepartidor(props) {
             const querySnapshot = await getDocs(collection(db, 'pedidos'))
             const docs = []
             querySnapshot.forEach((doc) => {
-                const { email, estado, id_cliente, latitude, longitude, montoTotal, nombre, domicilio, pedido, repartidor,fecha } = doc.data()
+                const { email, estado, id_cliente, latitude, longitude, montoTotal, nombre, domicilio, pedido, repartidor, fecha } = doc.data()
                 if (repartidor == "Sin asignar") {
                     docs.push({
                         id: doc.id,
@@ -68,28 +68,33 @@ export default function HomeRepartidor(props) {
 
     return (
         <ScrollView>
-            <TouchableOpacity style={styles.boton_pedido} onPress={() => props.navigation.navigate('PedidosActivosRepartidor')}>
-                        <Icon
-                            style={styles.icono}
-                            name="list-ul"
-                            size={30}
-                            color="white"
-                        />
-                        <Text>Pedidos activos</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.boton_pedido} onPress={() => props.navigation.navigate('PedidosRealizadosRepartidor')}>
-                        <Icon
-                            style={styles.icono}
-                            name="list-ul"
-                            size={30}
-                            color="white"
-                        />
-                        <Text>Pedidos realizados</Text>
-            </TouchableOpacity>
+            <View style={styles.contenedor_botones}>
+                <TouchableOpacity style={styles.boton_pedido} onPress={() => props.navigation.navigate('PedidosActivosRepartidor')}>
+                    <Icon
+                        style={styles.icono}
+                        name="check-square-o"
+                        size={30}
+                        color="white"
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.boton_pedido} onPress={() => props.navigation.navigate('PedidosRealizadosRepartidor')}>
+                    <Icon
+                        style={styles.icono}
+                        name="check-square"
+                        size={30}
+                        color="white"
+                    />
+                </TouchableOpacity>
 
-            <TouchableOpacity style={styles.boton} onPress={getListaPedidos}            >
-                <Text style={styles.texto_boton}>Actualizar pedidos</Text>
-            </TouchableOpacity>
+                <TouchableOpacity style={styles.boton_pedido} onPress={getListaPedidos}            >
+                <Icon
+                        style={styles.icono}
+                        name="refresh"
+                        size={30}
+                        color="white"
+                    />
+                </TouchableOpacity>
+            </View>
 
             <View style={styles.main_contenedor}>
                 <Text style={styles.texto_pedidos_activos}>Bienvenido repartidor: {repartidor.nombre}</Text>
@@ -99,7 +104,7 @@ export default function HomeRepartidor(props) {
                         <View style={styles.card} key={pedido.id}>
                             <ListItem key={pedido.id}>
                                 <ListItemContent>
-                                <Text style={styles.texto_pedido_etiqueta}>Id pedido: </Text>
+                                    <Text style={styles.texto_pedido_etiqueta}>Id pedido: </Text>
                                     <Text style={styles.texto_pedido}>{pedido.id}</Text>
                                     <Text style={styles.texto_pedido_etiqueta}>Nombre: </Text>
                                     <Text style={styles.texto_pedido}>{pedido.nombre}</Text>
@@ -112,7 +117,7 @@ export default function HomeRepartidor(props) {
                                             data_cliente: pedido,
                                             data_repartidor: repartidor,
                                             id_pedido: pedido.id,
-                                            id_repartidor: userId
+                                            id_repartidor: userId,
                                         })
                                     }}>
                                         <Text style={styles.texto_boton}>Aceptar pedido</Text>
@@ -125,7 +130,7 @@ export default function HomeRepartidor(props) {
 
             </View>
 
-            
+
         </ScrollView>
 
 
@@ -133,8 +138,15 @@ export default function HomeRepartidor(props) {
 }
 
 const styles = StyleSheet.create({
+    icono: {
+        padding: 8,
+    },
     main_contenedor: {
         flex: 1
+    },
+    contenedor_botones:{
+        flexDirection:'row',
+        marginLeft:85
     },
     card: {
         margin: 20,
@@ -184,8 +196,8 @@ const styles = StyleSheet.create({
         borderColor: "#e40f0f",
         borderWidth: 2,
         borderRadius: 15,
-        marginLeft: 10,
-        marginRight: 210,
+        marginLeft: 6,
+        marginRight: 5,
         marginTop: 15,
     },
 
