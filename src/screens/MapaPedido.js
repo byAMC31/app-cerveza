@@ -66,19 +66,20 @@ export default function Carrito(props) {
     const iniciarPedido = async() =>{
         console.log(props.route.params.data_repartidor.nombre)
         console.log(props.route.params.id_pedido)
-        try {
-            const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
-            await updateDoc(documentoRef, {
-              'repartidor': props.route.params.data_repartidor.nombre,
-              'estado': "En proceso de entrega",
-              'id_repartidor': props.route.params.id_repartidor
-            });
+        console.log(props.route.params.data_cliente.montoTotal)
+        // try {
+        //     const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
+        //     await updateDoc(documentoRef, {
+        //       'repartidor': props.route.params.data_repartidor.nombre,
+        //       'estado': "En proceso de entrega",
+        //       'id_repartidor': props.route.params.id_repartidor
+        //     });
         
-            console.log('Atributo actualizado correctamente.');
-          } catch (error) {
-            console.error('Error al actualizar el atributo:', error);
-          }
-        props.navigation.navigate('HomeRepartidor')
+        //     console.log('Atributo actualizado correctamente.');
+        //   } catch (error) {
+        //     console.error('Error al actualizar el atributo:', error);
+        //   }
+        // props.navigation.navigate('HomeRepartidor')
     }
 
     useEffect(() => {
@@ -112,7 +113,6 @@ export default function Carrito(props) {
         <ScrollView>
 
             <View style={styles.contenedorPadre}>
-                <Text>Ubicación donde llegará su pedido</Text>
                 <MapView
                     style={styles.mapa}
 
@@ -157,7 +157,7 @@ export default function Carrito(props) {
                 <TouchableOpacity style={styles.boton}>
                     <Text style={styles.textoBoton} onPress={iniciarPedido}>Iniciar pedido</Text>
                 </TouchableOpacity>
-                <Text>Detalles de pedido         Total: {montoTotal}</Text>
+                <Text>Detalles de pedido         Total: ${props.route.params.data_cliente.montoTotal},00</Text>
                 <View>
                     {props.route.params.data_cliente.pedido.map((item) => (
                         <Text key={item.id}>
@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        marginTop:10
     },
     contenedor_carrito_vacio: {
         margin: 120,
