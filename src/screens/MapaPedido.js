@@ -11,7 +11,6 @@ import {
     Alert
 } from "react-native";
 
-
 import { ScrollView } from "react-native-gesture-handler";
 import { getAuth } from 'firebase/auth';
 import appFirebase from "../credenciales.js";
@@ -25,6 +24,10 @@ import {
     getDoc,updateDoc
 } from "firebase/firestore";
 const db = getFirestore(appFirebase);
+const casa = require('../img/home.png');
+const moto = require('../img/moto.png');
+
+
 
 import { ListItem, Avatar } from "@rneui/themed";
 import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content.js";
@@ -32,22 +35,41 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 import MapView, { Marker, Polyline } from "react-native-maps";
 
-
+let la;
+let lo;
+let pro;
 export default function Carrito(props) {
     const [userIdLocal, setUserIdLocal] = useState(''); //id del usuario
     const [listaCarrito, setListaCarrito] = useState([]);
     const [montoTotal, setMontoTotal] = useState(0);
 
-    const [ubicacion, setUbicacion] = React.useState({
-        latitude: 17.078097,
-        longitude: -96.744962,
+
+    const dataCliente = () => {
+
+        const data = props.route.params.dataCliente;
+        //console.log(props.route.params.dataCliente.pedido); 
+        la = data.latitude;
+        lo = data.longitude;
+
+
+
+
+
+    }
+
+    dataCliente();
+
+    const [destination] = React.useState({
+        latitude: la,
+        longitude: lo
+    });
+
+    const [origin, setOrigin] = React.useState({
+        latitude: 19.082220,
+        longitude: -96.742451,
         address: ''
     });
 
-    const [destination, setDestination] = React.useState({
-        latitude: 17.082220,
-        longitude: -96.742451
-    });
 
     
     const iniciarPedido = async() =>{
@@ -67,9 +89,35 @@ export default function Carrito(props) {
           }
         props.navigation.navigate('HomeRepartidor')
     }
+
     useEffect(() => {
+        dataCliente();
+        getLocationPermission();
+
+        // Actualiza la ubicación actual cada segundo (1000 milisegundos)
+        const intervalId = setInterval(() => {
+            getLocationPermission();
+        }, 3000);
+
+        // Limpia el intervalo cuando el componente se desmonta
+        return () => clearInterval(intervalId);
     }, []);
 
+
+    async function getLocationPermission() {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Permiso denegado');
+            return;
+        }
+        let location = await Location.getCurrentPositionAsync({});
+        const current = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude
+        }
+        setOrigin(current);
+        // console.log(current)
+    }
     return (
         <ScrollView>
 
@@ -79,8 +127,8 @@ export default function Carrito(props) {
                     style={styles.mapa}
 
                     initialRegion={{
-                        latitude: ubicacion.latitude,
-                        longitude: ubicacion.longitude,
+                        latitude: 17.1096424,
+                        longitude: -96.699529,
                         latitudeDelta: 0.09,
                         longitudeDelta: 0.04
                     }}
@@ -89,27 +137,44 @@ export default function Carrito(props) {
                     zoomControlEnabled={true}
                     zoomTapEnabled={true}
                 >
-                    
+
                     <Marker
-                        draggable
-                        coordinate={ubicacion}
-                        onDragEnd={(ubicacion) => setUbicacion(ubicacion.nativeEvent.coordinate)}
+                        coordinate={origin}
+                        image={moto}
                     />
+
+                    <Marker
+                        //  draggable
+                        coordinate={destination}
+                        image={casa}
+                    //   onDragEnd={(direction) => setDestination(direction.nativeEvent.coordinate)}
+                    />
+
 
                     <MapViewDirections
-                        origin={ubicacion}
-
+                        origin={origin}
+                        destination={destination}
                         apikey={'AIzaSyBQ1LkKAkng61lFZCcFuHXmGFLYcpc9Oq8'}
+                        strokeColor='red'
 
+                        strokeWidth={3}
                     />
                 </MapView>
-                <Text> {ubicacion.address}</Text>
+                <Text> {destination.address}</Text>
             </View>
-            
+
             <View style={styles.tarjeta_boton_pedido}>
                 <TouchableOpacity style={styles.boton}>
                     <Text style={styles.textoBoton} onPress={iniciarPedido}>Iniciar pedido</Text>
                 </TouchableOpacity>
+                <Text>Detalles de pedido         Total: {montoTotal}</Text>
+                <View>
+                    {props.route.params.dataCliente.pedido.map((item) => (
+                        <Text key={item.id}>
+                            {item.cantidad}    {item.nombre}
+                        </Text>
+                    ))}
+                </View>
             </View>
 
         </ScrollView>
@@ -197,7 +262,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     mapa: {
-        width: 300,
-        height: 300,
+        width: 350,
+        height: 450,
     },
 });

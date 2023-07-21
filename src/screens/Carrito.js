@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
     },
     mapa: {
-        width: 300,
+        width: 350,
         height: 300,
     },
 });
