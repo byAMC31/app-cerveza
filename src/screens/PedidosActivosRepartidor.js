@@ -34,15 +34,20 @@ export default function PedidosCliente(props) {
                 const docs = []
 
                 querySnapshot.forEach((doc) => {
-                    const { nombre, domicilio, estado, repartidor, fecha, id_repartidor } = doc.data()
+                    const { email, estado, id_cliente, latitude, longitude, montoTotal, nombre, domicilio, pedido, repartidor, fecha, id_repartidor } = doc.data()
                     //Rescatamos solo los de este cliente|
                     if (id_repartidor == userId && estado == "En proceso de entrega") {
                         docs.push({
                             id: doc.id,
+                            email,
+                            estado,
+                            id_cliente,
+                            latitude,
+                            longitude,
+                            montoTotal,
                             nombre,
                             domicilio,
-                            estado,
-                            repartidor,
+                            pedido,
                             fecha
                         })
 
@@ -68,7 +73,7 @@ export default function PedidosCliente(props) {
                         <View style={styles.card} key={pedido.id}>
                             <ListItem key={pedido.id}>
                                 <ListItemContent>
-                                <Text style={styles.texto_etiqueta}>Id pedido: </Text>
+                                    <Text style={styles.texto_etiqueta}>Id pedido: </Text>
                                     <Text style={styles.texto_informacion}>{pedido.id}</Text>
                                     <Text style={styles.texto_etiqueta}>Nombre: </Text>
                                     <Text style={styles.texto_informacion}>{pedido.nombre}</Text>
@@ -133,5 +138,20 @@ const styles = StyleSheet.create({
         color: "#e40f0f",
         fontWeight: "bold",
         marginLeft: 96
+    },
+    texto_boton: {
+        textAlign: "center",
+        padding: 10,
+        color: "white",
+        fontSize: 16,
+    },
+    boton: {
+        backgroundColor: "#e40f0f",
+        borderColor: "#e40f0f",
+        borderWidth: 2,
+        borderRadius: 20,
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 10,
     },
 });

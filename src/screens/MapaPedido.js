@@ -67,19 +67,19 @@ export default function Carrito(props) {
         console.log(props.route.params.data_repartidor.nombre)
         console.log(props.route.params.id_pedido)
         console.log(props.route.params.data_cliente.montoTotal)
-        // try {
-        //     const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
-        //     await updateDoc(documentoRef, {
-        //       'repartidor': props.route.params.data_repartidor.nombre,
-        //       'estado': "En proceso de entrega",
-        //       'id_repartidor': props.route.params.id_repartidor
-        //     });
+        try {
+            const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
+            await updateDoc(documentoRef, {
+              'repartidor': props.route.params.data_repartidor.nombre,
+              'estado': "En proceso de entrega",
+              'id_repartidor': props.route.params.id_repartidor
+            });
         
-        //     console.log('Atributo actualizado correctamente.');
-        //   } catch (error) {
-        //     console.error('Error al actualizar el atributo:', error);
-        //   }
-        // props.navigation.navigate('HomeRepartidor')
+            console.log('Atributo actualizado correctamente.');
+          } catch (error) {
+            console.error('Error al actualizar el atributo:', error);
+          }
+        props.navigation.navigate('HomeRepartidor')
     }
 
     useEffect(() => {
