@@ -21,6 +21,10 @@ import BotellasDetalles from './src/screens/BotellasDetalles';
 import BotellasAgregar from './src/screens/BotellasAgregar';
 import HomeRepartidor from './src/screens/HomeRepartidor';
 import MapaPedido from './src/screens/MapaPedido';
+import RepartidoresLista from './src/screens/RepartidoresLista';
+import RepartidoresAgregar from './src/screens/RepartidoresAgregar';
+
+
 export default function App() {
   const Stack = createStackNavigator();
   function MyStack() {
@@ -240,6 +244,26 @@ export default function App() {
           component={MapaPedido}
           options={{
             title: "Mapa pedido",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="RepartidoresLista"
+          component={RepartidoresLista}
+          options={{
+            title: "Lista de repartidores",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="RepartidoresAgregar"
+          component={RepartidoresAgregar}
+          options={{
+            title: "Agregar un repartidor",
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#e40f0f" },
             headerTintColor: "white",

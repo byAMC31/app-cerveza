@@ -49,6 +49,23 @@ const AdminPrincipal = ({ navigation }) => {
         </ListItem.Content>
       </ListItem>
 
+      <ListItem
+          bottomDivider
+          onPress={() => {
+            navigation.navigate('RepartidoresLista', {
+            });
+          }}
+        >
+        <ListItem.Chevron />
+        <Avatar
+          rounded
+          source={{ uri: 'https://png.pngtree.com/png-vector/20210624/ourlarge/pngtree-location-icon-with-delivery-man-riding-red-scooter-vector-illustration-png-image_3517955.jpg' }}
+        />
+        <ListItem.Content>
+          <ListItem.Title>Repartidores</ListItem.Title>
+          <ListItem.Subtitle>Administra los repartidores registrados</ListItem.Subtitle>     
+        </ListItem.Content>
+      </ListItem>
 
       <ListItem
           bottomDivider
