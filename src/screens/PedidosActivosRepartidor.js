@@ -36,7 +36,7 @@ export default function PedidosCliente(props) {
                 querySnapshot.forEach((doc) => {
                     const { email, estado, id_cliente, latitude, longitude, montoTotal, nombre, domicilio, pedido, repartidor, fecha, id_repartidor } = doc.data()
                     //Rescatamos solo los de este cliente|
-                    if (id_repartidor == userId && estado == "En proceso de entrega") {
+                    if (id_repartidor == userId && estado == "En proceso de entrega" || estado == "Pedido en domicilio") {
                         docs.push({
                             id: doc.id,
                             email,
@@ -48,6 +48,7 @@ export default function PedidosCliente(props) {
                             nombre,
                             domicilio,
                             pedido,
+                            repartidor,
                             fecha
                         })
 

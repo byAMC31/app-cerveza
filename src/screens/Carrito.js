@@ -180,7 +180,7 @@ export default function Carrito(props) {
                                 longitude: ubicacion.longitude,
                                 pedido: listaCarrito,
                                 montoTotal: montoTotal,
-                                estado: "Por entregar",
+                                estado: "Recibido",
                                 domicilio: ubicacion.address,
                                 repartidor: "Sin asignar",
                                 fecha: new Date().toLocaleString(),

@@ -21,7 +21,7 @@ import {
     getDocs,
     doc,
     deleteDoc,
-    getDoc,updateDoc
+    getDoc, updateDoc
 } from "firebase/firestore";
 const db = getFirestore(appFirebase);
 const casa = require('../img/home.png');
@@ -63,24 +63,46 @@ export default function Carrito(props) {
         address: ''
     });
 
-    const iniciarPedido = async() =>{
-        console.log(props.route.params.data_repartidor.nombre)
-        console.log(props.route.params.id_pedido)
-        console.log(props.route.params.data_cliente.montoTotal)
+    const iniciarPedido = async () => {
         try {
             const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
             await updateDoc(documentoRef, {
-              'repartidor': props.route.params.data_repartidor.nombre,
-              'estado': "En proceso de entrega",
-              'id_repartidor': props.route.params.id_repartidor
+                'repartidor': props.route.params.data_repartidor.nombre,
+                'estado': "En proceso de entrega",
+                'id_repartidor': props.route.params.id_repartidor
             });
-        
             console.log('Atributo actualizado correctamente.');
-          } catch (error) {
+        } catch (error) {
             console.error('Error al actualizar el atributo:', error);
-          }
-        props.navigation.navigate('HomeRepartidor')
+        }
+         props.navigation.navigate('HomeRepartidor')
     }
+
+    const pedidoEnDomicilio = async () => {
+        try {
+            const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
+            await updateDoc(documentoRef, {
+                'estado': "Pedido en domicilio",
+            });
+            console.log('Atributo actualizado correctamente.');
+        } catch (error) {
+            console.error('Error al actualizar el atributo:', error);
+        }
+         props.navigation.navigate('HomeRepartidor')
+    }
+    const completarPedido = async () => {
+        try {
+            const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
+            await updateDoc(documentoRef, {
+                'estado': "Completado",
+            });
+            console.log('Atributo actualizado correctamente.');
+        } catch (error) {
+            console.error('Error al actualizar el atributo:', error);
+        }
+         props.navigation.navigate('HomeRepartidor')
+    }
+
 
     useEffect(() => {
         dataCliente();
@@ -154,9 +176,22 @@ export default function Carrito(props) {
             </View>
 
             <View style={styles.tarjeta_boton_pedido}>
-                <TouchableOpacity style={styles.boton}>
-                    <Text style={styles.textoBoton} onPress={iniciarPedido}>Iniciar pedido</Text>
-                </TouchableOpacity>
+                {props.route.params.data_cliente.estado === 'Recibido' ? (
+                    <TouchableOpacity style={styles.boton} onPress={iniciarPedido}>
+                        <Text style={styles.textoBoton}>Iniciar pedido</Text>
+                    </TouchableOpacity>
+                ) : props.route.params.data_cliente.estado === 'En proceso de entrega' ? (
+                    <TouchableOpacity style={styles.boton} onPress={pedidoEnDomicilio}>
+                        <Text style={styles.textoBoton}>Pedido en domicilio</Text>
+                    </TouchableOpacity>
+                ) : props.route.params.data_cliente.estado === 'Pedido en domicilio' ? (
+                    <TouchableOpacity style={styles.boton} onPress={completarPedido}>
+                        <Text style={styles.textoBoton}>Completar</Text>
+                    </TouchableOpacity>
+                ) : null}
+
+
+
                 <Text style={styles.texto_precio}>Detalles de pedido         Total: ${props.route.params.data_cliente.montoTotal},00</Text>
                 <View>
                     {props.route.params.data_cliente.pedido.map((item) => (
@@ -176,7 +211,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop:10
+        marginTop: 10
     },
     contenedor_carrito_vacio: {
         margin: 120,
