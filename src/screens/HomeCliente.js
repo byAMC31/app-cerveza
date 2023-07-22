@@ -10,7 +10,7 @@ export default function HomeCliente(props) {
     return (
         <ScrollView>
             <View style={styles.contenedorPadre}>
-
+{/*
                 <View style={styles.icono_contenedor}>
                     
                     <TouchableOpacity style={styles.boton_pedido} onPress={() => props.navigation.navigate('PedidosCliente')}>
@@ -21,6 +21,12 @@ export default function HomeCliente(props) {
                             color="white"
                         />
                     </TouchableOpacity>
+
+    */}
+
+
+
+    {/*
                     <TouchableOpacity style={styles.boton_carrito} onPress={() => props.navigation.navigate('Carrito')}>
                         <Icon
                             style={styles.icono}
@@ -31,7 +37,7 @@ export default function HomeCliente(props) {
                     </TouchableOpacity>
 
                 </View>
-
+    */}
 
                 <Text style={styles.texto_bienvenida}>¡Seleccione el tipo de bebida!</Text>
 
