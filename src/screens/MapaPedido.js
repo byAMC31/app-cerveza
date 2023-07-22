@@ -21,7 +21,7 @@ import {
     getDocs,
     doc,
     deleteDoc,
-    getDoc,
+    getDoc, updateDoc
 } from "firebase/firestore";
 const db = getFirestore(appFirebase);
 const casa = require('../img/home.png');
@@ -43,18 +43,11 @@ export default function Carrito(props) {
     const [listaCarrito, setListaCarrito] = useState([]);
     const [montoTotal, setMontoTotal] = useState(0);
 
-
     const dataCliente = () => {
-
-        const data = props.route.params.dataCliente;
+        const data = props.route.params.data_cliente;
         //console.log(props.route.params.dataCliente.pedido); 
         la = data.latitude;
         lo = data.longitude;
-
-
-
-
-
     }
 
     dataCliente();
@@ -70,12 +63,50 @@ export default function Carrito(props) {
         address: ''
     });
 
+    const iniciarPedido = async () => {
+        try {
+            const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
+            await updateDoc(documentoRef, {
+                'repartidor': props.route.params.data_repartidor.nombre,
+                'estado': "En proceso de entrega",
+                'id_repartidor': props.route.params.id_repartidor
+            });
+            console.log('Atributo actualizado correctamente.');
+        } catch (error) {
+            console.error('Error al actualizar el atributo:', error);
+        }
+         props.navigation.navigate('HomeRepartidor')
+    }
+
+    const pedidoEnDomicilio = async () => {
+        try {
+            const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
+            await updateDoc(documentoRef, {
+                'estado': "Pedido en domicilio",
+            });
+            console.log('Atributo actualizado correctamente.');
+        } catch (error) {
+            console.error('Error al actualizar el atributo:', error);
+        }
+         props.navigation.navigate('HomeRepartidor')
+    }
+    const completarPedido = async () => {
+        try {
+            const documentoRef = doc(db, 'pedidos', props.route.params.id_pedido);
+            await updateDoc(documentoRef, {
+                'estado': "Completado",
+            });
+            console.log('Atributo actualizado correctamente.');
+        } catch (error) {
+            console.error('Error al actualizar el atributo:', error);
+        }
+         props.navigation.navigate('HomeRepartidor')
+    }
 
 
     useEffect(() => {
         dataCliente();
         getLocationPermission();
-
         // Actualiza la ubicación actual cada segundo (1000 milisegundos)
         const intervalId = setInterval(() => {
             getLocationPermission();
@@ -104,7 +135,6 @@ export default function Carrito(props) {
         <ScrollView>
 
             <View style={styles.contenedorPadre}>
-                <Text>Ubicación donde llegará su pedido</Text>
                 <MapView
                     style={styles.mapa}
 
@@ -146,9 +176,25 @@ export default function Carrito(props) {
             </View>
 
             <View style={styles.tarjeta_boton_pedido}>
-                <Text>Detalles de pedido         Total: {montoTotal}</Text>
+                {props.route.params.data_cliente.estado === 'Recibido' ? (
+                    <TouchableOpacity style={styles.boton} onPress={iniciarPedido}>
+                        <Text style={styles.textoBoton}>Iniciar pedido</Text>
+                    </TouchableOpacity>
+                ) : props.route.params.data_cliente.estado === 'En proceso de entrega' ? (
+                    <TouchableOpacity style={styles.boton} onPress={pedidoEnDomicilio}>
+                        <Text style={styles.textoBoton}>Pedido en domicilio</Text>
+                    </TouchableOpacity>
+                ) : props.route.params.data_cliente.estado === 'Pedido en domicilio' ? (
+                    <TouchableOpacity style={styles.boton} onPress={completarPedido}>
+                        <Text style={styles.textoBoton}>Completar</Text>
+                    </TouchableOpacity>
+                ) : null}
+
+
+
+                <Text style={styles.texto_precio}>Detalles de pedido         Total: ${props.route.params.data_cliente.montoTotal},00</Text>
                 <View>
-                    {props.route.params.dataCliente.pedido.map((item) => (
+                    {props.route.params.data_cliente.pedido.map((item) => (
                         <Text key={item.id}>
                             {item.cantidad}    {item.nombre}
                         </Text>
@@ -165,6 +211,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        marginTop: 10
     },
     contenedor_carrito_vacio: {
         margin: 120,
@@ -238,7 +285,8 @@ const styles = StyleSheet.create({
     },
     texto_precio: {
         color: "black",
-        fontSize: 14,
+        fontSize: 16,
+        fontWeight: "bold",
     },
     mapa: {
         width: 350,

@@ -21,13 +21,19 @@ import BotellasDetalles from './src/screens/BotellasDetalles';
 import BotellasAgregar from './src/screens/BotellasAgregar';
 import HomeRepartidor from './src/screens/HomeRepartidor';
 import MapaPedido from './src/screens/MapaPedido';
+import PedidosCliente from './src/screens/PedidosCliente';
+import PedidosActivoRepartidor from './src/screens/PedidosActivosRepartidor';
+import PedidosRealizadosRepartidor from './src/screens/PedidosRealizadosRepartidor';
 import RepartidoresLista from './src/screens/RepartidoresLista';
 import RepartidoresAgregar from './src/screens/RepartidoresAgregar';
-
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { TouchableOpacity, View } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default function App() {
   const Stack = createStackNavigator();
-  function MyStack() {
+
+  function MainStack() {
     return (
       <Stack.Navigator>
         <Stack.Screen
@@ -63,50 +69,6 @@ export default function App() {
           }}
         />
 
-        <Stack.Screen
-          name="HomeCliente"
-          component={HomeCliente}
-          options={{
-            title: "Home",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#e40f0f" },
-            headerTintColor: "white",
-          }}
-        />
-
-        <Stack.Screen
-          name="ProductosCervezas"
-          component={ProductosCervezas}
-          options={{
-            title: "Cervezas",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#e40f0f" },
-            headerTintColor: "white",
-          }}
-        />
-
-        <Stack.Screen
-          name="ProductosBotellas"
-          component={ProductosBotellas}
-          options={{
-            title: "Botellas",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#e40f0f" },
-            headerTintColor: "white",
-          }}
-        />
-
-        <Stack.Screen
-          name="ProductoCerveza"
-          component={ProductoCerveza}
-          options={{
-            title: "Cerveza",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#e40f0f" },
-            headerTintColor: "white",
-          }}
-        />
-
 
         <Stack.Screen
           name="UsuariosLista"
@@ -119,16 +81,6 @@ export default function App() {
           }}
         />
 
-        <Stack.Screen
-          name="Carrito"
-          component={Carrito}
-          options={{
-            title: "Carrito",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#e40f0f" },
-            headerTintColor: "white",
-          }}
-        />
 
         <Stack.Screen
           name="AdminPrincipal"
@@ -184,16 +136,7 @@ export default function App() {
           }}
         />
 
-        <Stack.Screen
-          name="ProductoBotella"
-          component={ProductoBotella}
-          options={{
-            title: "Detalles de botella",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#e40f0f" },
-            headerTintColor: "white",
-          }}
-        />
+      
 
         <Stack.Screen
           name="BotellasLista"
@@ -270,12 +213,275 @@ export default function App() {
           }}
         />
 
+
+
+        <Stack.Screen
+          name="PedidosActivosRepartidor"
+          component={PedidosActivoRepartidor}
+          options={{
+            title: "Pedidos activos",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+        <Stack.Screen
+          name="PedidosRealizadosRepartidor"
+          component={PedidosRealizadosRepartidor}
+          options={{
+            title: "Pedidos realizados",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
+
+        <Stack.Screen
+          name="ProductosCervezas"
+          component={ProductosCervezas}
+          options={({ navigation }) => ({
+            title: "Cervezas",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('HomeCliente')}>
+                <Icon name="arrow-back" size={30} color="white" />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Carrito')}
+                style={{ marginRight: 10 }}
+              >
+                <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+                  <Icon name="shopping-cart" size={30} color="white" />
+                </View>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+
+<Stack.Screen
+          name="ProductoCerveza"
+          component={ProductoCerveza}
+          options={({ navigation }) => ({
+            title: "Detalles de cerveza",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('ProductosCervezas')}>
+                <Icon name="arrow-back" size={30} color="white" />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Carrito')}
+                style={{ marginRight: 10 }}
+              >
+                <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+                  <Icon name="shopping-cart" size={30} color="white" />
+                </View>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+
+
+
+        <Stack.Screen
+          name="ProductosBotellas"
+          component={ProductosBotellas}
+          options={({ navigation }) => ({
+            title: "Botellas",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('HomeCliente')}>
+                <Icon name="arrow-back" size={30} color="white" />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Carrito')}
+                style={{ marginRight: 10 }}
+              >
+                <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+                  <Icon name="shopping-cart" size={30} color="white" />
+                </View>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+
+      <Stack.Screen
+          name="ProductoBotella"
+          component={ProductoBotella}
+          options={({ navigation }) => ({
+            title: "Detalles de botella",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('ProductosBotellas')}>
+                <Icon name="arrow-back" size={30} color="white" />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Carrito')}
+                style={{ marginRight: 10 }}
+              >
+                <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+                  <Icon name="shopping-cart" size={30} color="white" />
+                </View>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+
+      {/*
+<Stack.Screen
+          name="PedidosCliente"
+          component={PedidosCliente}
+          options={({ navigation }) => ({
+            title: "Pedidos Realizados",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('HomeCliente')}>
+                <Icon name="arrow-back" size={30} color="white" />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Carrito')}
+                style={{ marginRight: 10 }}
+              >
+                <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+                  <Icon name="shopping-cart" size={30} color="white" />
+                </View>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+        */}
+
       </Stack.Navigator>
     );
   }
+
+
+
+
+  const Drawer = createDrawerNavigator();
+  function HomeClienteDrawer() {
+    return (
+      <Drawer.Navigator>
+        <Drawer.Screen
+          name="Inicio"
+          component={HomeCliente}
+          options={({ navigation }) => ({
+            title: "Inicio",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Carrito')}
+                style={{ marginRight: 10 }}
+              >
+                <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+                  <Icon name="shopping-cart" size={30} color="white" />
+                </View>
+              </TouchableOpacity>
+            ),
+            
+          })}
+        />
+    
+<Drawer.Screen
+      name="PedidosCliente"
+      component={PedidosCliente}
+      options={({ navigation }) => ({
+        title: "Pedidos realizados",
+        headerTitleAlign: "center",
+        headerStyle: { backgroundColor: "#e40f0f" },
+        headerTintColor: "white",
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Carrito')}
+            style={{ marginRight: 10 }}
+          >
+            <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+              <Icon name="shopping-cart" size={30} color="white" />
+            </View>
+          </TouchableOpacity>
+        ),
+      })}
+    />
+        
+   
+
+      </Drawer.Navigator>
+    );
+  }
+
+
+
+
+
+  function CarritoDrawer() {
+    return (
+      <Drawer.Navigator>
+        <Drawer.Screen 
+        name="Carro" 
+        component={Carrito} 
+        options={({ navigation }) => ({
+          title: "Carrito",
+          headerTitleAlign: "center",
+          headerStyle: { backgroundColor: "#e40f0f" },
+          headerTintColor: "white",
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('HomeCliente')}
+              style={{ marginRight: 10 }}
+            >
+              <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+                <Icon name="home" size={30} color="white" />
+              </View>
+            </TouchableOpacity>
+          ),
+         // headerLeft: () => null,
+         headerLeft: () => (
+          <TouchableOpacity onPress={() => navigation.navigate('HomeCliente')}>
+            <Icon name="arrow-back" size={30} color="white" />
+          </TouchableOpacity>
+        ),
+        })}
+      />
+      </Drawer.Navigator>
+    );
+  }
+
+
+
+
+
+
   return (
     <NavigationContainer>
-      <MyStack />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Main" component={MainStack} />
+        <Stack.Screen name="HomeCliente" component={HomeClienteDrawer} />
+        <Stack.Screen name="Carrito" component={CarritoDrawer} />
+
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
+
