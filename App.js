@@ -26,8 +26,8 @@ import PedidosActivoRepartidor from './src/screens/PedidosActivosRepartidor';
 import PedidosRealizadosRepartidor from './src/screens/PedidosRealizadosRepartidor'; 
 import RepartidoresLista from './src/screens/RepartidoresLista';
 import RepartidoresAgregar from './src/screens/RepartidoresAgregar';
-
-
+import 'expo-dev-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function App() {
   const Stack = createStackNavigator();
   function MyStack() {
