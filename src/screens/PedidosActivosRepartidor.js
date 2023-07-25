@@ -34,7 +34,7 @@ export default function PedidosCliente(props) {
                 const docs = []
 
                 querySnapshot.forEach((doc) => {
-                    const { email, estado, id_cliente, latitude, longitude, montoTotal, nombre, domicilio, pedido, repartidor, fecha, id_repartidor } = doc.data()
+                    const { email, estado, id_cliente, latitude, longitude, montoTotal, nombre, domicilio, pedido, repartidor, fecha, id_repartidor, telefono_cliente } = doc.data()
                     //Rescatamos solo los de este cliente|
                     if (id_repartidor == userId && estado == "En proceso de entrega" || estado == "Pedido en domicilio") {
                         docs.push({
@@ -49,7 +49,8 @@ export default function PedidosCliente(props) {
                             domicilio,
                             pedido,
                             repartidor,
-                            fecha
+                            fecha,
+                            telefono_cliente
                         })
 
                     }
@@ -86,6 +87,8 @@ export default function PedidosCliente(props) {
                                     <Text style={styles.texto_informacion}>{pedido.repartidor}</Text>
                                     <Text style={styles.texto_etiqueta}>Fecha: </Text>
                                     <Text style={styles.texto_informacion}>{pedido.fecha}</Text>
+                                    <Text style={styles.texto_etiqueta}>Telefono: </Text>
+                                    <Text style={styles.texto_informacion}>{pedido.telefono_cliente}</Text>
                                 </ListItemContent>
                             </ListItem>
                             <TouchableOpacity style={styles.boton} onPress={() => {
