@@ -175,6 +175,7 @@ export default function Carrito(props) {
                             const pedido = {
                                 id_cliente: userIdLocal,
                                 email: usuario.email,
+                                telefono_cliente: usuario.telefono_cliente,
                                 nombre: usuario.nombre,
                                 latitude: ubicacion.latitude,
                                 longitude: ubicacion.longitude,

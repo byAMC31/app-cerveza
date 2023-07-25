@@ -129,8 +129,45 @@ export default function Carrito(props) {
             longitude: location.coords.longitude
         }
         setOrigin(current);
-        // console.log(current)
+        console.log(current)
     }
+
+    const enviarMensajeWhatsApp = () => {
+        const botId = '111613305345690';
+        //const phoneNbr = '+52'+'9514998080';
+        const phoneNbr = '+52'+props.route.params.data_cliente.telefono_cliente;
+        
+        const bearerToken = 'EAAR1melTAP0BAI4Y4JAAueqhJrH1UnI8FoqolukqRiuAe9deJF414Mb3UGHPWu5YqbqsHYtpJR87IHx2gfZAYqQocnsVbqCqcqNlUjeHOHcYb5PVGAETjb1Rwo7c2MfI0CM2YLWz1rO2bdNSqddYwaB5Jc2ISa65ZCltn02pIQD2jsAjr0c1jLgfIGTgMZCzXzP8MqS5AZDZD';
+    
+        const url = 'https://graph.facebook.com/v17.0/' + botId + '/messages';
+        const data = {
+            messaging_product: 'whatsapp',
+            to: phoneNbr,
+            type: 'template',
+            template: {
+                name: 'hello_world',
+                language: { code: 'en_US' }
+            }
+        };
+    
+        const postReq = {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + bearerToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+            json: true
+        };
+    
+        fetch(url, postReq)
+            .then(data => data.json())
+            .then(res => {
+                console.log(res);
+            })
+            .catch(error => console.log(error));
+    };
+
     return (
         <ScrollView>
 
@@ -200,6 +237,10 @@ export default function Carrito(props) {
                         </Text>
                     ))}
                 </View>
+
+                <TouchableOpacity style={styles.botonw} onPress={enviarMensajeWhatsApp}>
+                    <Text style={styles.textoBoton}>Enviar WhatsApp</Text>
+                </TouchableOpacity>
             </View>
 
         </ScrollView>
@@ -257,6 +298,15 @@ const styles = StyleSheet.create({
     boton: {
         backgroundColor: "#e40f0f",
         borderColor: "#e40f0f",
+        borderWidth: 2,
+        borderRadius: 20,
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 20,
+    },
+    botonw: {
+        backgroundColor: "#1ACB32",
+        borderColor: "#1ACB32",
         borderWidth: 2,
         borderRadius: 20,
         marginLeft: 20,
