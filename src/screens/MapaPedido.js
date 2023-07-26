@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
-import * as LocationGeocoding from 'expo-location';
-
+// import * as LocationGeocoding from 'expo-location';
 import {
     Text,
     StyleSheet,
     View,
     TouchableOpacity,
-    Alert
 } from "react-native";
 
 import { ScrollView } from "react-native-gesture-handler";
-import { getAuth } from 'firebase/auth';
+
 import appFirebase from "../credenciales.js";
 import {
     getFirestore,
@@ -29,19 +27,11 @@ const moto = require('../img/moto.png');
 
 
 
-import { ListItem, Avatar } from "@rneui/themed";
-import { ListItemContent } from "@rneui/base/dist/ListItem/ListItem.Content.js";
-import Icon from "react-native-vector-icons/FontAwesome";
-
-import MapView, { Marker, Polyline } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 
 let la;
 let lo;
-let pro;
-export default function Carrito(props) {
-    const [userIdLocal, setUserIdLocal] = useState(''); //id del usuario
-    const [listaCarrito, setListaCarrito] = useState([]);
-    const [montoTotal, setMontoTotal] = useState(0);
+export default function MapaPedido(props) {
 
     const dataCliente = () => {
         const data = props.route.params.data_cliente;
@@ -59,8 +49,7 @@ export default function Carrito(props) {
 
     const [origin, setOrigin] = React.useState({
         latitude: 19.082220,
-        longitude: -96.742451,
-        address: ''
+        longitude: -96.742451
     });
 
     const iniciarPedido = async () => {
@@ -75,7 +64,7 @@ export default function Carrito(props) {
         } catch (error) {
             console.error('Error al actualizar el atributo:', error);
         }
-         props.navigation.navigate('HomeRepartidor')
+        props.navigation.navigate('HomeRepartidor')
     }
 
     const pedidoEnDomicilio = async () => {
@@ -88,7 +77,7 @@ export default function Carrito(props) {
         } catch (error) {
             console.error('Error al actualizar el atributo:', error);
         }
-         props.navigation.navigate('HomeRepartidor')
+        props.navigation.navigate('HomeRepartidor')
     }
     const completarPedido = async () => {
         try {
@@ -100,21 +89,44 @@ export default function Carrito(props) {
         } catch (error) {
             console.error('Error al actualizar el atributo:', error);
         }
-         props.navigation.navigate('HomeRepartidor')
+        props.navigation.navigate('HomeRepartidor')
     }
+
+    const actualizar_coordenadas_repartidor = async () => {
+        if (props.route.params.data_cliente.id_repartidor !== "Sin asignar") {
+            try {
+                const documentoRef = doc(db, 'usuarios', props.route.params.data_cliente.id_repartidor);
+                await new Promise((resolve, reject) => {
+                    updateDoc(documentoRef, {
+                        'latitude': origin.latitude,
+                        'longitude': origin.longitude
+                    }).then(() => {
+                        console.log('Coordenadas del repartidor actualizadas correctamente.');
+                        resolve(); // Resuelve la promesa para continuar el flujo de ejecución
+                    }).catch((error) => {
+                        console.error('Error al actualizar el atributo:', error);
+                        reject(); // Rechaza la promesa para propagar el error
+                    });
+                });
+            } catch (error) {
+                console.error('Error al actualizar el atributo:', error);
+            }
+        }
+    };
 
 
     useEffect(() => {
         dataCliente();
-        getLocationPermission();
+        // getLocationPermission();
+        
         // Actualiza la ubicación actual cada segundo (1000 milisegundos)
         const intervalId = setInterval(() => {
-            getLocationPermission();
-        }, 3000);
-
+            getLocationPermission();     
+        }, 5000);
+        
         // Limpia el intervalo cuando el componente se desmonta
         return () => clearInterval(intervalId);
-    }, []);
+    }, [origin]);
 
 
     async function getLocationPermission() {
@@ -129,8 +141,46 @@ export default function Carrito(props) {
             longitude: location.coords.longitude
         }
         setOrigin(current);
-        // console.log(current)
+        actualizar_coordenadas_repartidor();
+        console.log(current)
     }
+
+    const enviarMensajeWhatsApp = () => {
+        const botId = '111613305345690';
+        //const phoneNbr = '+52'+'9514998080';
+        const phoneNbr = '+52' + props.route.params.data_cliente.telefono_cliente;
+
+        const bearerToken = 'EAAR1melTAP0BAI4Y4JAAueqhJrH1UnI8FoqolukqRiuAe9deJF414Mb3UGHPWu5YqbqsHYtpJR87IHx2gfZAYqQocnsVbqCqcqNlUjeHOHcYb5PVGAETjb1Rwo7c2MfI0CM2YLWz1rO2bdNSqddYwaB5Jc2ISa65ZCltn02pIQD2jsAjr0c1jLgfIGTgMZCzXzP8MqS5AZDZD';
+
+        const url = 'https://graph.facebook.com/v17.0/' + botId + '/messages';
+        const data = {
+            messaging_product: 'whatsapp',
+            to: phoneNbr,
+            type: 'template',
+            template: {
+                name: 'hello_world',
+                language: { code: 'en_US' }
+            }
+        };
+
+        const postReq = {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + bearerToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+            json: true
+        };
+
+        fetch(url, postReq)
+            .then(data => data.json())
+            .then(res => {
+                console.log(res);
+            })
+            .catch(error => console.log(error));
+    };
+
     return (
         <ScrollView>
 
@@ -200,6 +250,10 @@ export default function Carrito(props) {
                         </Text>
                     ))}
                 </View>
+
+                <TouchableOpacity style={styles.botonw} onPress={enviarMensajeWhatsApp}>
+                    <Text style={styles.textoBoton}>Enviar WhatsApp</Text>
+                </TouchableOpacity>
             </View>
 
         </ScrollView>
@@ -257,6 +311,15 @@ const styles = StyleSheet.create({
     boton: {
         backgroundColor: "#e40f0f",
         borderColor: "#e40f0f",
+        borderWidth: 2,
+        borderRadius: 20,
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 20,
+    },
+    botonw: {
+        backgroundColor: "#1ACB32",
+        borderColor: "#1ACB32",
         borderWidth: 2,
         borderRadius: 20,
         marginLeft: 20,

@@ -35,6 +35,7 @@ export default function SignUp(props) {
           password: estado.password,
           edad: estado.edad,
           rol: 'cliente',
+          telefono_cliente: estado.telefono_cliente
         };
   
         // Crear el usuario en Firebase Authentication
@@ -78,7 +79,7 @@ export default function SignUp(props) {
             <TextInput placeholder='E-mail' style={styles.texto_input} value={estado.email} onChangeText={(value) => handleChangeText(value, 'email')} />
             <TextInput placeholder='Password' style={styles.texto_input} secureTextEntry={true} value={estado.password} onChangeText={(value) => handleChangeText(value, 'password')} />
             <TextInput placeholder='Edad' style={styles.texto_input} value={estado.edad} onChangeText={(value) => handleChangeText(value, 'edad')} />
-
+            <TextInput placeholder='Numero telefonico' style={styles.texto_input} value={estado.telefono_cliente} onChangeText={(value) => handleChangeText(value, 'telefono_cliente')} />
             <TouchableOpacity style={styles.boton} onPress={signUpUser} >
               <Text style={styles.textoBoton}>Sign Up</Text>
             </TouchableOpacity>

@@ -25,7 +25,7 @@ export default function PedidosCliente(props) {
                 const docs = []
 
                 querySnapshot.forEach((doc) => {
-                    const { nombre, domicilio, estado, repartidor, fecha, id_cliente } = doc.data()
+                    const { nombre, domicilio, estado, repartidor, fecha, id_cliente,id_repartidor,latitude,longitude,montoTotal } = doc.data()
                     //Rescatamos solo los de este cliente|
                     if (id_cliente == userId) {
                         docs.push({
@@ -34,9 +34,13 @@ export default function PedidosCliente(props) {
                             domicilio,
                             estado,
                             repartidor,
-                            fecha
+                            fecha,
+                            id_repartidor,
+                            latitude,
+                            longitude,
+                            montoTotal
                         })
-                        
+
                     }
                 })
                 setListaPedidos(docs);
@@ -68,7 +72,20 @@ export default function PedidosCliente(props) {
                                     <Text style={styles.texto_informacion}>{pedido.repartidor}</Text>
                                     <Text style={styles.texto_etiqueta}>Fecha: </Text>
                                     <Text style={styles.texto_informacion}>{pedido.fecha}</Text>
+                                    {pedido.repartidor != "Sin asignar" ? (
+                                    <TouchableOpacity style={styles.boton} onPress={() => {
+                                        props.navigation.navigate('MapaPedidoCliente', {
+                                            pedido: pedido,
+                                        })
+                                    }}>
+                                        <Text style={styles.texto_boton}>Seguimiento del pedido</Text>
+                                    </TouchableOpacity>
+                                    ) : null
+                                    }
+
                                 </ListItemContent>
+
+
                             </ListItem>
                         </View>
                     ))
@@ -109,5 +126,20 @@ const styles = StyleSheet.create({
         color: "#e40f0f",
         fontWeight: "bold",
         marginLeft: 96
+    },
+    boton: {
+        backgroundColor: "#e40f0f",
+        borderColor: "#e40f0f",
+        borderWidth: 2,
+        borderRadius: 20,
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 20,
+    },
+    texto_boton: {
+        textAlign: "center",
+        padding: 10,
+        color: "white",
+        fontSize: 16,
     },
 });

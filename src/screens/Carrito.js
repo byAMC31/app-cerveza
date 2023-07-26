@@ -158,6 +158,13 @@ export default function Carrito(props) {
                 Alert.alert('Carrito vacío', 'No hay productos en el carrito para realizar el pedido.');
                 return;
             }
+            
+   // Validar si el campo telefono_cliente del usuario autenticado existe o está vacío
+   if (!usuario.telefono_cliente || usuario.telefono_cliente.trim() === '') {
+    Alert.alert('Ingrese un número de teléfono', 'Debe ingresar un número de teléfono antes de realizar el pedido.');
+    props.navigation.navigate('UsuarioDatos', { mensaje: 'Ingrese un número de teléfono antes de realizar el pedido.' });
+    return;
+}
 
             // Mostrar la alerta de confirmación antes de realizar el pedido
             Alert.alert(
@@ -175,6 +182,7 @@ export default function Carrito(props) {
                             const pedido = {
                                 id_cliente: userIdLocal,
                                 email: usuario.email,
+                                telefono_cliente: usuario.telefono_cliente,
                                 nombre: usuario.nombre,
                                 latitude: ubicacion.latitude,
                                 longitude: ubicacion.longitude,
