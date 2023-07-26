@@ -49,6 +49,7 @@ export default function PedidosCliente(props) {
                             domicilio,
                             pedido,
                             repartidor,
+                            id_repartidor,
                             fecha,
                             telefono_cliente
                         })
