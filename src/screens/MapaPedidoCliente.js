@@ -115,20 +115,28 @@ export default function MapaPedidoCliente(props) {
                         />
                     )}
 
-                    {/* <MapViewDirections
-                        origin={coordenadas_repartidor}
-                        destination={
-                            {
-                                latitude: latitude_cliente,
-                                longitude: longitude_cliente,
+                    {latitude_repartidor !== null && longitude_repartidor !== null && latitude_cliente !== null && longitude_cliente && (
+                        <MapViewDirections
+                            origin={
+                                {
+                                    latitude: latitude_repartidor,
+                                    longitude: longitude_repartidor,
+                                }
                             }
-                        }
-                        apikey={'AIzaSyBQ1LkKAkng61lFZCcFuHXmGFLYcpc9Oq8'}
-                        strokeColor='red'
+                            destination={
 
-                        strokeWidth={3}
-                    /> */}
+                                {
+                                    latitude: latitude_cliente,
+                                    longitude: longitude_cliente
+                                }
 
+                            }
+                            apikey={'AIzaSyBQ1LkKAkng61lFZCcFuHXmGFLYcpc9Oq8'}
+                            strokeColor='red'
+
+                            strokeWidth={3}
+                        />
+                    )}
                 </MapView>
                 {/* <Text> {destination.address}</Text> */}
             </View>

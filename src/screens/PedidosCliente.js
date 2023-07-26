@@ -72,7 +72,7 @@ export default function PedidosCliente(props) {
                                     <Text style={styles.texto_informacion}>{pedido.repartidor}</Text>
                                     <Text style={styles.texto_etiqueta}>Fecha: </Text>
                                     <Text style={styles.texto_informacion}>{pedido.fecha}</Text>
-                                    {pedido.repartidor != "Sin asignar" ? (
+                                    {pedido.repartidor != "Sin asignar" && pedido.estado != "Completado" ? (
                                     <TouchableOpacity style={styles.boton} onPress={() => {
                                         props.navigation.navigate('MapaPedidoCliente', {
                                             pedido: pedido,

@@ -118,12 +118,12 @@ export default function MapaPedido(props) {
     useEffect(() => {
         dataCliente();
         // getLocationPermission();
-        
+
         // Actualiza la ubicación actual cada segundo (1000 milisegundos)
         const intervalId = setInterval(() => {
-            getLocationPermission();     
+            getLocationPermission();
         }, 5000);
-        
+
         // Limpia el intervalo cuando el componente se desmonta
         return () => clearInterval(intervalId);
     }, [origin]);
@@ -250,10 +250,12 @@ export default function MapaPedido(props) {
                         </Text>
                     ))}
                 </View>
+                { props.route.params.data_cliente.estado === 'Pedido en domicilio' ? (
+                    <TouchableOpacity style={styles.botonw} onPress={enviarMensajeWhatsApp}>
+                        <Text style={styles.textoBoton}>Enviar WhatsApp</Text>
+                    </TouchableOpacity>
+                ): null  }
 
-                <TouchableOpacity style={styles.botonw} onPress={enviarMensajeWhatsApp}>
-                    <Text style={styles.textoBoton}>Enviar WhatsApp</Text>
-                </TouchableOpacity>
             </View>
 
         </ScrollView>
