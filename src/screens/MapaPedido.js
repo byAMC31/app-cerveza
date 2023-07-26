@@ -118,6 +118,7 @@ export default function Carrito(props) {
 
 
     async function getLocationPermission() {
+
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
             alert('Permiso denegado');
@@ -129,7 +130,7 @@ export default function Carrito(props) {
             longitude: location.coords.longitude
         }
         setOrigin(current);
-        // console.log(current)
+        console.log(current)
     }
     return (
         <ScrollView>
@@ -166,7 +167,7 @@ export default function Carrito(props) {
                     <MapViewDirections
                         origin={origin}
                         destination={destination}
-                        apikey={'AIzaSyBQ1LkKAkng61lFZCcFuHXmGFLYcpc9Oq8'}
+                        apikey={'AIzaSyAUdkB54pEC6UvbTpcLKDftlT5cM8CnrRM'}
                         strokeColor='red'
 
                         strokeWidth={3}

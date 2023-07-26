@@ -26,6 +26,11 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "config":{
+        "googleMaps":{
+          "apiKey": "AIzaSyAUdkB54pEC6UvbTpcLKDftlT5cM8CnrRM"
+        }
+      },
       "package": "com.abiu12.appcervezas"
     },
     "web": {

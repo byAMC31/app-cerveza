@@ -120,7 +120,7 @@ export default function SignUp(props) {
       console.error(error)
     }
   }
-
+// Podemos pasar a la otra vista
   return (
     <ImageBackground source={require("../img/bg_login.jpg")} style={styles.backgroundImage}>
       <View style={styles.contenedorPadre}>
