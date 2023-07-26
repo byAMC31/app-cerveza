@@ -29,6 +29,8 @@ import RepartidoresAgregar from './src/screens/RepartidoresAgregar';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import UsuarioDatos from './src/screens/UsuarioDatos';
+
 import MapaPedidoCliente from './src/screens/MapaPedidoCliente';
 
 export default function App() {
@@ -48,17 +50,31 @@ export default function App() {
           }}
         />
 
-        <Stack.Screen
+<Stack.Screen
           name="MapaPedidoCliente"
           component={MapaPedidoCliente}
-          options={{
-            title: "Seguimiento de pedido",
+          options={({ navigation }) => ({
+            title: "Mapa del pedido",
             headerTitleAlign: "center",
             headerStyle: { backgroundColor: "#e40f0f" },
             headerTintColor: "white",
-          }}
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('HomeCliente')}>
+                <Icon name="arrow-back" size={30} color="white" />
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Carrito')}
+                style={{ marginRight: 10 }}
+              >
+                <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+                  <Icon name="shopping-cart" size={30} color="white" />
+                </View>
+              </TouchableOpacity>
+            ),
+          })}
         />
-
 
         <Stack.Screen
           name="Login"
@@ -416,30 +432,50 @@ export default function App() {
 
           })}
         />
-
+    
+<Drawer.Screen
+      name="PedidosCliente"
+      component={PedidosCliente}
+      options={({ navigation }) => ({
+        title: "Pedidos realizados",
+        headerTitleAlign: "center",
+        headerStyle: { backgroundColor: "#e40f0f" },
+        headerTintColor: "white",
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Carrito')}
+            style={{ marginRight: 10 }}
+          >
+            <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+              <Icon name="shopping-cart" size={30} color="white" />
+            </View>
+          </TouchableOpacity>
+        ),
+      })}
+    />
+        
         <Drawer.Screen
-          name="PedidosCliente"
-          component={PedidosCliente}
-          options={({ navigation }) => ({
-            title: "Pedidos realizados",
-            headerTitleAlign: "center",
-            headerStyle: { backgroundColor: "#e40f0f" },
-            headerTintColor: "white",
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Carrito')}
-                style={{ marginRight: 10 }}
-              >
-                <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
-                  <Icon name="shopping-cart" size={30} color="white" />
-                </View>
-              </TouchableOpacity>
-            ),
-          })}
-        />
-
-
-
+      name="UsuarioDatos"
+      component={UsuarioDatos}
+      options={({ navigation }) => ({
+        title: "Datos del usuario",
+        headerTitleAlign: "center",
+        headerStyle: { backgroundColor: "#e40f0f" },
+        headerTintColor: "white",
+        headerRight: () => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Carrito')}
+            style={{ marginRight: 10 }}
+          >
+            <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+              <Icon name="shopping-cart" size={30} color="white" />
+            </View>
+          </TouchableOpacity>
+        ),
+      })}
+    />
+        
+   
       </Drawer.Navigator>
     );
   }
