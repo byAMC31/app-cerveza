@@ -26,6 +26,8 @@ import PedidosActivoRepartidor from './src/screens/PedidosActivosRepartidor';
 import PedidosRealizadosRepartidor from './src/screens/PedidosRealizadosRepartidor';
 import RepartidoresLista from './src/screens/RepartidoresLista';
 import RepartidoresAgregar from './src/screens/RepartidoresAgregar';
+import 'expo-dev-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';

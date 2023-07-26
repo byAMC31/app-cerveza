@@ -3,10 +3,23 @@ import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity } from
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import Icon from "react-native-vector-icons/FontAwesome";
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 const Drawer = createDrawerNavigator();
+import auth from '@react-native-firebase/auth';
 
 export default function HomeCliente(props) {
+    GoogleSignin.configure({
+    webClientId: '34648858927-isqqeqrkpgngcsoouvmnepvn574uga8q.apps.googleusercontent.com',
+  });
+    const signOut = async () => {
+        try {
+          await GoogleSignin.revokeAccess();
+          await auth().signOut();
+          props.navigation.navigate('Login')
+        } catch (error) {
+          console.error(error)
+        }
+      }
     return (
         <ScrollView>
             <View style={styles.contenedorPadre}>
@@ -66,6 +79,10 @@ export default function HomeCliente(props) {
                 </View>
 
             </View>
+            <TouchableOpacity style={styles.boton} onPress={signOut}>
+                            <Text style={styles.textoBoton}>Cerrar sesion</Text>
+            </TouchableOpacity>
+
         </ScrollView>
 
 

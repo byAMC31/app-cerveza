@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
-import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity, Alert,Button } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import appFirebase from '../credenciales.js';
-import { getFirestore, collection, addDoc,setDoc,doc } from 'firebase/firestore';
+import { getFirestore, collection, addDoc, setDoc, doc } from 'firebase/firestore';
 
 const db = getFirestore(appFirebase);
+
+import 'expo-dev-client';
+
+import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth';
+
+
 
 export default function SignUp(props) {
   // Variables para capturar los datos
@@ -37,14 +44,14 @@ export default function SignUp(props) {
           rol: 'cliente',
           telefono_cliente: estado.telefono_cliente
         };
-  
+
         // Crear el usuario en Firebase Authentication
         const auth = getAuth();
         const { user } = await createUserWithEmailAndPassword(auth, estado.email, estado.password);
-  
+
         // Utiliza setDoc para agregar el usuario con el UID como ID del documento en Firestore
         await setDoc(doc(db, 'usuarios', user.uid), usuario);
-  
+
         Alert.alert('Registro exitoso', '¡Usuario registrado con éxito!');
         props.navigation.navigate('Principal');
       }
@@ -54,41 +61,108 @@ export default function SignUp(props) {
         case 'auth/invalid-email':
           Alert.alert('Correo electrónico inválido');
           break;
-          case 'auth/weak-password':
+        case 'auth/weak-password':
           Alert.alert('La contraseña debe de tener minimo 6 caracteres');
           break;
-       
+
         default:
           Alert.alert('Error', 'Hubo un error al registrar el usuario. Por favor, inténtalo de nuevo.');
           console.log(error)
 
-        }
+      }
 
 
     }
   }
 
-  return (
-    <ImageBackground source={require("../img/bg_login.jpg")} style={styles.backgroundImage}>
-      <View style={styles.contenedorPadre}>
-        <View style={styles.tarjeta}>
-          <View style={styles.contenedor}>
-            <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
-            <Text style={styles.texto_bienvenido}>Bienvenido a DrinkNet</Text>
-            <TextInput placeholder='Nombre' style={styles.texto_input} value={estado.nombre} onChangeText={(value) => handleChangeText(value, 'nombre')} />
-            <TextInput placeholder='E-mail' style={styles.texto_input} value={estado.email} onChangeText={(value) => handleChangeText(value, 'email')} />
-            <TextInput placeholder='Password' style={styles.texto_input} secureTextEntry={true} value={estado.password} onChangeText={(value) => handleChangeText(value, 'password')} />
-            <TextInput placeholder='Edad' style={styles.texto_input} value={estado.edad} onChangeText={(value) => handleChangeText(value, 'edad')} />
-            <TextInput placeholder='Numero telefonico' style={styles.texto_input} value={estado.telefono_cliente} onChangeText={(value) => handleChangeText(value, 'telefono_cliente')} />
-            <TouchableOpacity style={styles.boton} onPress={signUpUser} >
-              <Text style={styles.textoBoton}>Sign Up</Text>
-            </TouchableOpacity>
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
 
+  GoogleSignin.configure({
+    webClientId: '34648858927-isqqeqrkpgngcsoouvmnepvn574uga8q.apps.googleusercontent.com',
+  });
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  if (initializing) return null;
+
+  //Para cerrar sesion
+  const signOut = async()  => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await auth().signOut();
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const onGoogleButtonPress = async () => {
+    // Check if your device supports Google Play
+    await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+    // Get the users ID token
+    const { idToken } = await GoogleSignin.signIn();
+
+    // Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+
+    const user_sign_in = auth().signInWithCredential(googleCredential);
+
+    user_sign_in.then((user) => {
+      console.log(user);
+    }).catch((error) => {
+      console.log(error);
+    })
+
+  }
+
+
+
+  // setUser(null)
+  if (!user) {
+    // Podemos pasar a la otra vista
+    return (
+      <ImageBackground source={require("../img/bg_login.jpg")} style={styles.backgroundImage}>
+        <View style={styles.contenedorPadre}>
+          <View style={styles.tarjeta}>
+            <View style={styles.contenedor}>
+              <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
+              <Text style={styles.texto_bienvenido}>Bienvenido a DrinkNet</Text>
+              <TextInput placeholder='Nombre' style={styles.texto_input} value={estado.nombre} onChangeText={(value) => handleChangeText(value, 'nombre')} />
+              <TextInput placeholder='E-mail' style={styles.texto_input} value={estado.email} onChangeText={(value) => handleChangeText(value, 'email')} />
+              <TextInput placeholder='Password' style={styles.texto_input} secureTextEntry={true} value={estado.password} onChangeText={(value) => handleChangeText(value, 'password')} />
+              <TextInput placeholder='Edad' style={styles.texto_input} value={estado.edad} onChangeText={(value) => handleChangeText(value, 'edad')} />
+              <TextInput placeholder='Numero telefonico' style={styles.texto_input} value={estado.telefono_cliente} onChangeText={(value) => handleChangeText(value, 'telefono_cliente')} />
+              <TouchableOpacity style={styles.boton} onPress={signUpUser} >
+                <Text style={styles.textoBoton}>Sign Up</Text>
+              </TouchableOpacity>
+
+              <GoogleSigninButton style={{ width: 250, height: 50, marginTop: 20 }}
+                onPress={onGoogleButtonPress}
+              />
+
+            </View>
           </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    );
+  }
+  return (
+    <View style={styles.container}>
+      <Text>{user.displayName}</Text>
+      <Button title='Sign out' onPress={signOut}></Button>
+    </View>
   );
+
 }
 
 const styles = StyleSheet.create({

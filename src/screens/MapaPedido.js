@@ -130,6 +130,7 @@ export default function MapaPedido(props) {
 
 
     async function getLocationPermission() {
+
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
             alert('Permiso denegado');
@@ -216,7 +217,7 @@ export default function MapaPedido(props) {
                     <MapViewDirections
                         origin={origin}
                         destination={destination}
-                        apikey={'AIzaSyBQ1LkKAkng61lFZCcFuHXmGFLYcpc9Oq8'}
+                        apikey={'AIzaSyAUdkB54pEC6UvbTpcLKDftlT5cM8CnrRM'}
                         strokeColor='red'
 
                         strokeWidth={3}

@@ -2,6 +2,9 @@
   "expo": {
     "name": "app-cerveza",
     "slug": "app-cerveza",
+    "plugins": [
+      "@react-native-google-signin/google-signin"
+    ],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,13 +21,25 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "config":{
+        "googleMaps":{
+          "apiKey": "AIzaSyAUdkB54pEC6UvbTpcLKDftlT5cM8CnrRM"
+        }
+      },
+      "package": "com.abiu12.appcervezas"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a5771ef7-48ee-42ea-8305-3f0fa4548bcd"
+      }
     }
   }
 }

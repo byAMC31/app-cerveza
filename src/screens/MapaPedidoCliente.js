@@ -75,7 +75,7 @@ export default function MapaPedidoCliente(props) {
         return () => clearInterval(intervalId);
     }, []);
 
-
+    
     return (
         <ScrollView>
 
@@ -131,7 +131,7 @@ export default function MapaPedidoCliente(props) {
                                 }
 
                             }
-                            apikey={'AIzaSyBQ1LkKAkng61lFZCcFuHXmGFLYcpc9Oq8'}
+                            apikey={'AIzaSyAUdkB54pEC6UvbTpcLKDftlT5cM8CnrRM'}
                             strokeColor='red'
 
                             strokeWidth={3}
