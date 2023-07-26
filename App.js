@@ -29,6 +29,7 @@ import RepartidoresAgregar from './src/screens/RepartidoresAgregar';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import MapaPedidoCliente from './src/screens/MapaPedidoCliente';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -46,6 +47,18 @@ export default function App() {
             headerTintColor: "white",
           }}
         />
+
+        <Stack.Screen
+          name="MapaPedidoCliente"
+          component={MapaPedidoCliente}
+          options={{
+            title: "Seguimiento de pedido",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+          }}
+        />
+
 
         <Stack.Screen
           name="Login"
@@ -136,7 +149,7 @@ export default function App() {
           }}
         />
 
-      
+
 
         <Stack.Screen
           name="BotellasLista"
@@ -263,7 +276,7 @@ export default function App() {
           })}
         />
 
-<Stack.Screen
+        <Stack.Screen
           name="ProductoCerveza"
           component={ProductoCerveza}
           options={({ navigation }) => ({
@@ -317,7 +330,7 @@ export default function App() {
           })}
         />
 
-      <Stack.Screen
+        <Stack.Screen
           name="ProductoBotella"
           component={ProductoBotella}
           options={({ navigation }) => ({
@@ -343,7 +356,7 @@ export default function App() {
           })}
         />
 
-      {/*
+        {/*
 <Stack.Screen
           name="PedidosCliente"
           component={PedidosCliente}
@@ -400,32 +413,32 @@ export default function App() {
                 </View>
               </TouchableOpacity>
             ),
-            
+
           })}
         />
-    
-<Drawer.Screen
-      name="PedidosCliente"
-      component={PedidosCliente}
-      options={({ navigation }) => ({
-        title: "Pedidos realizados",
-        headerTitleAlign: "center",
-        headerStyle: { backgroundColor: "#e40f0f" },
-        headerTintColor: "white",
-        headerRight: () => (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Carrito')}
-            style={{ marginRight: 10 }}
-          >
-            <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
-              <Icon name="shopping-cart" size={30} color="white" />
-            </View>
-          </TouchableOpacity>
-        ),
-      })}
-    />
-        
-   
+
+        <Drawer.Screen
+          name="PedidosCliente"
+          component={PedidosCliente}
+          options={({ navigation }) => ({
+            title: "Pedidos realizados",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Carrito')}
+                style={{ marginRight: 10 }}
+              >
+                <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+                  <Icon name="shopping-cart" size={30} color="white" />
+                </View>
+              </TouchableOpacity>
+            ),
+          })}
+        />
+
+
 
       </Drawer.Navigator>
     );
@@ -438,32 +451,32 @@ export default function App() {
   function CarritoDrawer() {
     return (
       <Drawer.Navigator>
-        <Drawer.Screen 
-        name="Carro" 
-        component={Carrito} 
-        options={({ navigation }) => ({
-          title: "Carrito",
-          headerTitleAlign: "center",
-          headerStyle: { backgroundColor: "#e40f0f" },
-          headerTintColor: "white",
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('HomeCliente')}
-              style={{ marginRight: 10 }}
-            >
-              <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
-                <Icon name="home" size={30} color="white" />
-              </View>
-            </TouchableOpacity>
-          ),
-         // headerLeft: () => null,
-         headerLeft: () => (
-          <TouchableOpacity onPress={() => navigation.navigate('HomeCliente')}>
-            <Icon name="arrow-back" size={30} color="white" />
-          </TouchableOpacity>
-        ),
-        })}
-      />
+        <Drawer.Screen
+          name="Carro"
+          component={Carrito}
+          options={({ navigation }) => ({
+            title: "Carrito",
+            headerTitleAlign: "center",
+            headerStyle: { backgroundColor: "#e40f0f" },
+            headerTintColor: "white",
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('HomeCliente')}
+                style={{ marginRight: 10 }}
+              >
+                <View style={{ backgroundColor: '#e40f0f', padding: 5, borderRadius: 15 }}>
+                  <Icon name="home" size={30} color="white" />
+                </View>
+              </TouchableOpacity>
+            ),
+            // headerLeft: () => null,
+            headerLeft: () => (
+              <TouchableOpacity onPress={() => navigation.navigate('HomeCliente')}>
+                <Icon name="arrow-back" size={30} color="white" />
+              </TouchableOpacity>
+            ),
+          })}
+        />
       </Drawer.Navigator>
     );
   }

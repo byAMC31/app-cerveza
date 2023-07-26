@@ -33,7 +33,7 @@ export default function HomeRepartidor(props) {
             const querySnapshot = await getDocs(collection(db, 'pedidos'))
             const docs = []
             querySnapshot.forEach((doc) => {
-                const { email, estado, id_cliente, latitude, longitude, montoTotal, nombre, domicilio, pedido, repartidor, fecha } = doc.data()
+                const { email, estado, id_cliente, latitude, longitude, montoTotal, nombre, domicilio, pedido, repartidor, fecha,id_repartidor } = doc.data()
                 if (repartidor == "Sin asignar") {
                     docs.push({
                         id: doc.id,
@@ -46,7 +46,8 @@ export default function HomeRepartidor(props) {
                         nombre,
                         domicilio,
                         pedido,
-                        fecha
+                        fecha,
+                        id_repartidor,
                     })
                 }
 
