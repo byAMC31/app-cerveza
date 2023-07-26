@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity, Alert } from 'react-native';
+import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity, Alert,Button } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import appFirebase from '../credenciales.js';
@@ -42,6 +42,7 @@ export default function SignUp(props) {
           password: estado.password,
           edad: estado.edad,
           rol: 'cliente',
+          telefono_cliente: estado.telefono_cliente
         };
 
         // Crear el usuario en Firebase Authentication
@@ -77,6 +78,7 @@ export default function SignUp(props) {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
+
   GoogleSignin.configure({
     webClientId: '34648858927-isqqeqrkpgngcsoouvmnepvn574uga8q.apps.googleusercontent.com',
   });
@@ -92,6 +94,16 @@ export default function SignUp(props) {
   }, []);
 
   if (initializing) return null;
+
+  //Para cerrar sesion
+  const signOut = async()  => {
+    try {
+      await GoogleSignin.revokeAccess();
+      await auth().signOut();
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   const onGoogleButtonPress = async () => {
     // Check if your device supports Google Play
@@ -110,42 +122,47 @@ export default function SignUp(props) {
     }).catch((error) => {
       console.log(error);
     })
+
   }
 
-  const signOut = async () => {
-    try {
-      await GoogleSignin.revokeAccess();
-      await auth().signOut();
-    } catch (error) {
-      console.error(error)
-    }
-  }
-// Podemos pasar a la otra vista
-  return (
-    <ImageBackground source={require("../img/bg_login.jpg")} style={styles.backgroundImage}>
-      <View style={styles.contenedorPadre}>
-        <View style={styles.tarjeta}>
-          <View style={styles.contenedor}>
-            <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
-            <Text style={styles.texto_bienvenido}>Bienvenido a DrinkNet</Text>
-            <TextInput placeholder='Nombre' style={styles.texto_input} value={estado.nombre} onChangeText={(value) => handleChangeText(value, 'nombre')} />
-            <TextInput placeholder='E-mail' style={styles.texto_input} value={estado.email} onChangeText={(value) => handleChangeText(value, 'email')} />
-            <TextInput placeholder='Password' style={styles.texto_input} secureTextEntry={true} value={estado.password} onChangeText={(value) => handleChangeText(value, 'password')} />
-            <TextInput placeholder='Edad' style={styles.texto_input} value={estado.edad} onChangeText={(value) => handleChangeText(value, 'edad')} />
 
-            <TouchableOpacity style={styles.boton} onPress={signUpUser} >
-              <Text style={styles.textoBoton}>Sign Up</Text>
-            </TouchableOpacity>
-            
-            <GoogleSigninButton style={{ width: 250, height: 50, marginTop: 20 }}
-              onPress={onGoogleButtonPress}
-            />
 
+  // setUser(null)
+  if (!user) {
+    // Podemos pasar a la otra vista
+    return (
+      <ImageBackground source={require("../img/bg_login.jpg")} style={styles.backgroundImage}>
+        <View style={styles.contenedorPadre}>
+          <View style={styles.tarjeta}>
+            <View style={styles.contenedor}>
+              <Image style={styles.logo} source={require("../img/logo_login.jpg")} />
+              <Text style={styles.texto_bienvenido}>Bienvenido a DrinkNet</Text>
+              <TextInput placeholder='Nombre' style={styles.texto_input} value={estado.nombre} onChangeText={(value) => handleChangeText(value, 'nombre')} />
+              <TextInput placeholder='E-mail' style={styles.texto_input} value={estado.email} onChangeText={(value) => handleChangeText(value, 'email')} />
+              <TextInput placeholder='Password' style={styles.texto_input} secureTextEntry={true} value={estado.password} onChangeText={(value) => handleChangeText(value, 'password')} />
+              <TextInput placeholder='Edad' style={styles.texto_input} value={estado.edad} onChangeText={(value) => handleChangeText(value, 'edad')} />
+              <TextInput placeholder='Numero telefonico' style={styles.texto_input} value={estado.telefono_cliente} onChangeText={(value) => handleChangeText(value, 'telefono_cliente')} />
+              <TouchableOpacity style={styles.boton} onPress={signUpUser} >
+                <Text style={styles.textoBoton}>Sign Up</Text>
+              </TouchableOpacity>
+
+              <GoogleSigninButton style={{ width: 250, height: 50, marginTop: 20 }}
+                onPress={onGoogleButtonPress}
+              />
+
+            </View>
           </View>
         </View>
-      </View>
-    </ImageBackground>
+      </ImageBackground>
+    );
+  }
+  return (
+    <View style={styles.container}>
+      <Text>{user.displayName}</Text>
+      <Button title='Sign out' onPress={signOut}></Button>
+    </View>
   );
+
 }
 
 const styles = StyleSheet.create({
