@@ -68,6 +68,7 @@ export default function Login(props) {
         // Agrega más casos según las necesidades
         default:
           Alert.alert('Error de inicio de sesión: ' + error.message);
+          console.log(error.message);
       }
   
       

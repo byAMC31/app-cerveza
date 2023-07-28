@@ -1,56 +1,31 @@
-import React, { useState, useEffect } from 'react'
-import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity } from 'react-native'
-import { ScrollView, TextInput } from 'react-native-gesture-handler';
-import Icon from "react-native-vector-icons/FontAwesome";
+
+import { Text, StyleSheet, View, Image, TouchableOpacity } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
+ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 const Drawer = createDrawerNavigator();
 import auth from '@react-native-firebase/auth';
-
+// import { getAuth, signOut } from '@react-native-firebase/auth';
 export default function HomeCliente(props) {
-    GoogleSignin.configure({
-    webClientId: '34648858927-isqqeqrkpgngcsoouvmnepvn574uga8q.apps.googleusercontent.com',
-  });
-    const signOut = async () => {
+
+    // // 2. Usa getAuth() para obtener la instancia de autenticación
+    // const auth = getAuth();
+    // // 3. Recuperar la ID del usuario actualmente autenticado
+    // const userId = auth.currentUser?.uid;
+
+    const cerrarSesion = async () => {
         try {
-          await GoogleSignin.revokeAccess();
-          await auth().signOut();
-          props.navigation.navigate('Login')
-        } catch (error) {
-          console.error(error)
-        }
-      }
+            await GoogleSignin.revokeAccess();
+            await auth().signOut();
+            props.navigation.navigate('Principal');
+          } catch (error) {
+            console.error(error)
+          }
+      };
+
     return (
         <ScrollView>
             <View style={styles.contenedorPadre}>
-{/*
-                <View style={styles.icono_contenedor}>
-                    
-                    <TouchableOpacity style={styles.boton_pedido} onPress={() => props.navigation.navigate('PedidosCliente')}>
-                        <Icon
-                            style={styles.icono}
-                            name="list-ul"
-                            size={30}
-                            color="white"
-                        />
-                    </TouchableOpacity>
-
-    */}
-
-
-
-    {/*
-                    <TouchableOpacity style={styles.boton_carrito} onPress={() => props.navigation.navigate('Carrito')}>
-                        <Icon
-                            style={styles.icono}
-                            name="shopping-cart"
-                            size={30}
-                            color="white"
-                        />
-                    </TouchableOpacity>
-
-                </View>
-    */}
 
                 <Text style={styles.texto_bienvenida}>¡Seleccione el tipo de bebida!</Text>
 
@@ -79,8 +54,8 @@ export default function HomeCliente(props) {
                 </View>
 
             </View>
-            <TouchableOpacity style={styles.boton} onPress={signOut}>
-                            <Text style={styles.textoBoton}>Cerrar sesion</Text>
+            <TouchableOpacity style={styles.boton} onPress={cerrarSesion}>
+                <Text style={styles.textoBoton}>Cerrar sesion</Text>
             </TouchableOpacity>
 
         </ScrollView>
@@ -92,7 +67,7 @@ export default function HomeCliente(props) {
 const styles = StyleSheet.create({
     contenedorPadre: {
         flex: 1,
-        marginRight:8
+        marginRight: 8
     },
     tarjeta: {
         margin: 20,
@@ -134,7 +109,7 @@ const styles = StyleSheet.create({
         marginLeft: 18,
     },
     icono_contenedor: {
-        flexDirection:'row',
+        flexDirection: 'row',
         flex: 1,
         justifyContent: "flex-end", // Alineación vertical al centro
         alignItems: "flex-end", // Alineación horizontal al centro
@@ -161,14 +136,14 @@ const styles = StyleSheet.create({
     icono: {
         padding: 8,
     },
-    texto_bienvenida:{
-        textAlign:'center',
+    texto_bienvenida: {
+        textAlign: 'center',
         fontSize: 18,
         fontWeight: 'bold',
-        marginTop:20
+        marginTop: 20
     },
-    texto_categoria:{
-        textAlign:'center',
+    texto_categoria: {
+        textAlign: 'center',
         fontSize: 18,
         fontWeight: 'bold',
     },
