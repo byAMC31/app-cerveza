@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity, Alert,Button } from 'react-native';
+import { Text, StyleSheet, View, ImageBackground, Image, TouchableOpacity, Alert, Button } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import appFirebase from '../credenciales.js';
@@ -85,6 +85,7 @@ export default function SignUp(props) {
   // Handle user state changes
   function onAuthStateChanged(user) {
     setUser(user);
+    console.log('entre a setear el usuario');
     if (initializing) setInitializing(false);
   }
 
@@ -96,7 +97,7 @@ export default function SignUp(props) {
   if (initializing) return null;
 
   //Para cerrar sesion
-  const signOut = async()  => {
+  const signOut = async () => {
     try {
       await GoogleSignin.revokeAccess();
       await auth().signOut();
@@ -105,30 +106,51 @@ export default function SignUp(props) {
     }
   }
 
+
+
   const onGoogleButtonPress = async () => {
     // Check if your device supports Google Play
     await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
     // Get the users ID token
     const { idToken } = await GoogleSignin.signIn();
-
+  
     // Create a Google credential with the token
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    auth().signInWithCredential(googleCredential)
+      .then((userCredential) => {
+        // Get the user from the userCredential
+        const user = userCredential.user;
+        // Create the user object with the required information
+        const usuario = {
+          nombre: user.displayName,
+          email: user.email,
+          password: '',
+          edad: 22,
+          rol: 'cliente',
+          telefono_cliente: '9513986572'
+        };
 
-
-    const user_sign_in = auth().signInWithCredential(googleCredential);
-
-    user_sign_in.then((user) => {
-      console.log(user);
-    }).catch((error) => {
-      console.log(error);
-    })
-
-  }
+  
+        // Utilize setDoc to add the user with the UID as the document ID in Firestore
+        setDoc(doc(db, 'usuarios', user.uid), usuario)
+          .then(() => {
+            console.log('Usuario registrado correctamente.');
+            // Aquí puedes agregar lógica adicional después de que el usuario se haya registrado exitosamente
+          })
+          .catch((error) => {
+            console.log('Error al agregar el usuario:', error);
+          });
+          signOut();
+      })
+      .catch((error) => {
+        console.log('Error al autenticar el usuario con Google:', error);
+      });
+  };
 
 
 
   // setUser(null)
-  if (!user) {
+   if (!user) {
     // Podemos pasar a la otra vista
     return (
       <ImageBackground source={require("../img/bg_login.jpg")} style={styles.backgroundImage}>
@@ -155,15 +177,22 @@ export default function SignUp(props) {
         </View>
       </ImageBackground>
     );
-  }
-  return (
-    <View style={styles.container}>
-      <Text>{user.displayName}</Text>
-      <Button title='Sign out' onPress={signOut}></Button>
-    </View>
-  );
+   }
 
-}
+     
+    if(user){
+      props.navigation.navigate('HomeCliente')
+return (
+  
+      <View style={styles.container}>
+        <Text>{user.displayName}</Text>
+        <Button title='Sign out' onPress={signOut}></Button>
+      </View>
+    );
+    }
+  }
+
+// }
 
 const styles = StyleSheet.create({
   backgroundImage: {

@@ -67,6 +67,10 @@ export default function ProductoCerveza(props) {
     };
 
     useEffect(() => {
+        // 2. Usa getAuth() para obtener la instancia de autenticación
+        const auth = getAuth();
+        // 3. Recuperar la ID del usuario actualmente autenticado
+        const userId = auth.currentUser?.uid;
         getOneProduct(props.route.params.idProducto);
     }, []);
 
@@ -81,7 +85,7 @@ export default function ProductoCerveza(props) {
             const auth = getAuth();
             // 3. Recuperar la ID del usuario actualmente autenticado
             const userId = auth.currentUser?.uid;
-        
+            console.log(userId);
             await addDoc(collection(db,'usuarios',userId, "carrito"),{
               ...productoGenerado
             })
@@ -89,6 +93,7 @@ export default function ProductoCerveza(props) {
             props.navigation.navigate('HomeCliente')
           
         } catch (error) {
+            console.log("Aqui esta el error")
           console.log(error);
         }
       }
