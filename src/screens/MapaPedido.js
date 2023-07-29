@@ -151,7 +151,7 @@ export default function MapaPedido(props) {
         //const phoneNbr = '+52'+'9514998080';
         const phoneNbr = '+52' + props.route.params.data_cliente.telefono_cliente;
 
-        const bearerToken = 'EAAR1melTAP0BAI4Y4JAAueqhJrH1UnI8FoqolukqRiuAe9deJF414Mb3UGHPWu5YqbqsHYtpJR87IHx2gfZAYqQocnsVbqCqcqNlUjeHOHcYb5PVGAETjb1Rwo7c2MfI0CM2YLWz1rO2bdNSqddYwaB5Jc2ISa65ZCltn02pIQD2jsAjr0c1jLgfIGTgMZCzXzP8MqS5AZDZD';
+        const bearerToken = 'EAAR1melTAP0BO1ZBMAOWiWONIITPsMN4T2uQxHcUnufYra3pzPLHKdtsB5uwmOmTO70437BNKFjMhVW0oi6fzSdYZBhNnm1yPZB6w2UnMebLwzF0ZAKZAuTKF4xfPBm2ycVEhejiWOXzm3uLPoGOmUARTznhubgQ0IR6esSs1AMzVGZCVLQslwjFXifzHILKN6DO2OUFFypkE38Xm7ZAs4ZD';
 
         const url = 'https://graph.facebook.com/v17.0/' + botId + '/messages';
         const data = {
